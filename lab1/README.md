@@ -109,8 +109,14 @@ mvn clean package -B -DskipTests -Dfast -Pinclude-kinesis -pl flink-connectors/f
 
 
 ### Download our sample code
-These labs will use the public Amazon Customer Reviews dataset. Amazon Customer Reviews (a.k.a. Product Reviews) is one of Amazon’s iconic products. In a period of over two decades since the first review in 1995, millions of Amazon customers have contributed over a hundred million reviews to express opinions and describe their experiences regarding products on the Amazon.com website.  Find out more about the dataset [here](https://s3.amazonaws.com/amazon-reviews-pds/readme.html).
+Find out more about the sample code [here](https://docs.aws.amazon.com/kinesisanalytics/latest/java/get-started-exercise.html).
 
+* In the terminal, paste and run the following code to setup the Flink 1.6.2 environment and to compile the Kinesis connector for Flink.
+
+```
+cd ~/environment
+
+```
 
 * Download a portion of the dataset to your local computer from [https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Kitchen_v1_00.tsv.gz](https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Kitchen_v1_00.tsv.gz).  This dataset contains reviews for products in the Kitchen product category.  Save the dataset file somewhere where you can easily find it later.
 
