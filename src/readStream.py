@@ -4,7 +4,7 @@ from datetime import datetime
 import time
 
 #
-# Change the name of the my_stream_name parameter to append your Initials (line 10/11)
+# Change the name of the my_stream_name parameter to append your Initials (lines 10 and 11)
 #
 
 my_stream_name = 'ExampleInputStream'
@@ -36,8 +36,8 @@ while 'NextShardIterator' in record_response:
          jdat = o["Data"]
          print (jdat);
 
-    # wait for 5 seconds
-    # time.sleep(5)
+    # wait for 1 seconds
+    time.sleep(1)
     
-# used https://www.arundhaj.com/blog/getting-started-kinesis-python.html as a starting point
-# merged in some code from https://aws.amazon.com/blogs/big-data/snakes-in-the-stream-feeding-and-eating-amazon-kinesis-streams-with-python/
+# This code used https://www.arundhaj.com/blog/getting-started-kinesis-python.html as a starting point
+# Then we merged in some code from https://aws.amazon.com/blogs/big-data/snakes-in-the-stream-feeding-and-eating-amazon-kinesis-streams-with-python/

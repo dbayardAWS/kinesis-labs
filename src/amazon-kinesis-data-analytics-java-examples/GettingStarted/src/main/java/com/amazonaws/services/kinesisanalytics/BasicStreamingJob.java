@@ -16,7 +16,11 @@ import java.util.Properties;
  * A basic Kinesis Data Analytics for Java application with Kinesis data
  * streams as source and sink.
  * 
- * Be sure to append your Initials to the inputStreamName and outputStreamName (lines 24 and 25)
+ * Based on the example at https://docs.aws.amazon.com/kinesisanalytics/latest/java/get-started-exercise.html , but modified for readability.
+ *
+ * Be sure to append your Initials to the inputStreamName and outputStreamName (lines 28 and 29)
+ *
+ * And if not using the us-east-1 region, modify line 27
  * 
  */
 public class BasicStreamingJob {
@@ -26,21 +30,15 @@ public class BasicStreamingJob {
 
     private static DataStream<String> createSourceFromStaticConfig(StreamExecutionEnvironment env) {
         Properties inputProperties = new Properties();
-        // inputProperties.setProperty(ConsumerConfigConstants.AWS_REGION, region);
+        inputProperties.setProperty(ConsumerConfigConstants.AWS_REGION, region);
         inputProperties.setProperty(ConsumerConfigConstants.STREAM_INITIAL_POSITION, "LATEST");
 
         return env.addSource(new FlinkKinesisConsumer<>(inputStreamName, new SimpleStringSchema(), inputProperties));
     }
 
-    private static DataStream<String> createSourceFromApplicationProperties(StreamExecutionEnvironment env) throws IOException {
-        Map<String, Properties> applicationProperties = KinesisAnalyticsRuntime.getApplicationProperties();
-        return env.addSource(new FlinkKinesisConsumer<>(inputStreamName, new SimpleStringSchema(),
-                applicationProperties.get("ConsumerConfigProperties")));
-    }
-
     private static FlinkKinesisProducer<String> createSinkFromStaticConfig() {
         Properties outputProperties = new Properties();
-        // outputProperties.setProperty(ConsumerConfigConstants.AWS_REGION, region);
+        outputProperties.setProperty(ConsumerConfigConstants.AWS_REGION, region);
         outputProperties.setProperty("AggregationEnabled", "false");
 
         FlinkKinesisProducer<String> sink = new FlinkKinesisProducer<>(new SimpleStringSchema(), outputProperties);
@@ -49,30 +47,18 @@ public class BasicStreamingJob {
         return sink;
     }
 
-    private static FlinkKinesisProducer<String> createSinkFromApplicationProperties() throws IOException {
-        Map<String, Properties> applicationProperties = KinesisAnalyticsRuntime.getApplicationProperties();
-        FlinkKinesisProducer<String> sink = new FlinkKinesisProducer<>(new SimpleStringSchema(),
-                applicationProperties.get("ProducerConfigProperties"));
-
-        sink.setDefaultStream(outputStreamName);
-        sink.setDefaultPartition("0");
-        return sink;
-    }
 
     public static void main(String[] args) throws Exception {
         // set up the streaming execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        /* if you would like to use runtime configuration properties, uncomment the lines below
-         * DataStream<String> input = createSourceFromApplicationProperties(env);
-         */
-        DataStream<String> input = createSourceFromStaticConfig(env);
+        // define the source
+        DataStream<String> input = createSourceFromStaticConfig(env).name(inputStreamName);
 
-        /* if you would like to use runtime configuration properties, uncomment the lines below
-         * input.addSink(createSinkFromApplicationProperties())
-         */
-        input.addSink(createSinkFromStaticConfig());
+        // add a sink
+        input.addSink(createSinkFromStaticConfig()).name(outputStreamName);
 
-        env.execute("Flink Streaming Java API Skeleton");
+        // execute the environment
+        env.execute("Flink Streaming Java Getting Started");
     }
 }

@@ -181,19 +181,19 @@ python stock.py
 ![screenshot](images/stock5.png)
 
 
-### Edit and launch the readOutputStream Consumer
+### Edit and launch the readStream Consumer
 
-* In the Cloud9 navigator on the left-hand side, expand the kinesis-labs folder, then the src folder.  Then double-click on the readOutputStream.py file to open it in a tab in the editor.
+* In the Cloud9 navigator on the left-hand side, expand the kinesis-labs folder, then the src folder.  Then double-click on the readStream.py file to open it in a tab in the editor.
 
 ![screenshot](images/read1.png)
 
-* Find the my_stream_name parameter in the readOutputStream.py code and append your initials to the Stream name (to match the name of the kinesis input stream you created with the "aws kinesis create-stream" command above).
+* Find the my_stream_name parameter in the readStream.py code and append your initials to the Stream name (to match the name of the kinesis input stream you created with the "aws kinesis create-stream" command above).
 
 Note: at this point, the my_stream_name should be set to the ExampleInputStream[Initials].  In a later exercise, we will point this consumer to the ExampleOutputStream but not yet.
 
 ![screenshot](images/read2.png)
 
-* Then use the File..Save menu to save the modified readOutputStream.py file
+* Then use the File..Save menu to save the modified readStream.py file
 
 ![screenshot](images/read3.png)
 
@@ -205,7 +205,7 @@ Note: at this point, the my_stream_name should be set to the ExampleInputStream[
 
 ```
 cd kinesis-labs/src
-python readOutputStream.py
+python readStream.py
 
 ```
 
@@ -213,7 +213,7 @@ python readOutputStream.py
 
 You should see the messages from the Kinesis stream printed out to the console.
 
-* In the terminal tab running the readOutputStream.py, type ctrl-c to stop it.
+* In the terminal tab running the readStream.py, type ctrl-c to stop it.
 
 ![screenshot](images/read5.png)
 
@@ -229,6 +229,10 @@ You should see the messages from the Kinesis stream printed out to the console.
 Note: Be sure to edit both the inputStreamName and outputStreamName
 
 ![screenshot](images/started2.png)
+
+* NOTE: If you are not running in the AWS region 'us-east-1', then you need to edit the java source code to change the "region" variable to the correct region.
+
+![screenshot](images/started2a.png)
 
 * Then use the File..Save menu to save the modified BasicStreamingJob.java file
 
@@ -315,7 +319,9 @@ java-getting-started-1.0.jar
 
 * Expand Snapshots and disable them
 
-* Expand Monitoring and enable Cloudwatch Logging
+* Expand Monitoring and enable Cloudwatch Logging.  Leave the level of logging to WARN for now.
+
+Hint: if you need to debug why your KDAJ application isn't working, you may need to change this INFO at a later point.
 
 * Click the Update button
 
@@ -332,8 +338,74 @@ At this point, your Flink application is starting.  It may take a few minutes to
 
 ![screenshot](images/kin7.png)
 
-### run the python producer and consumer
+### Add permissions to the generated IAM policy for your application
+Even though the KDAJ Console generated an IAM policy for your application, the Console does not know that your java code wants to read the ExampleInputStream kinesis stream and write to the ExampleOutputStream kinesis stream.  As such, the Console UI didn't add those permissions to your applications IAM policy.
 
+Let's now edit the application's policy to add permissions so that the application can run OK.
+
+
+Open the IAM console at https://console.aws.amazon.com/iam/.
+
+Choose Policies. Choose the kinesis-analytics-service-kdaj_app_[INITIALS]-[REGION] policy that the console created for you in the previous section.  Hint: type "kdaj" in the search box.
+
+On the Summary page, choose Edit policy. Choose the JSON tab.
+
+Add the highlighted section of the following policy example to the policy. Replace the sample account IDs (012345678901) with your account ID. 
+arn:aws:kinesis:us-east-1:946160804628:stream/ExampleInputStreamDB
+
+{
+            "Sid": "ReadInputStream",
+            "Effect": "Allow",
+            "Action": "kinesis:*",
+            "Resource": "arn:aws:kinesis:us-east-1:535356700373:stream/ExampleInputStream"
+        },
+        {
+            "Sid": "WriteOutputStream",
+            "Effect": "Allow",
+            "Action": "kinesis:*",
+            "Resource": "arn:aws:kinesis:us-east-1:535356700373:stream/ExampleOutputStream"
+        },
+        {
+            "Sid": "Stmt789",
+            "Effect": "Allow",
+            "Action": [
+              "cloudwatch:PutMetricData"
+            ],
+            "Resource": [
+              "*"
+            ]
+        }
+
+
+### Edit the readStream.py consumer
+
+* Go back to your Cloud9 IDE browser page.  Click on the existing tab for the readStream.py file.
+
+* Edit readStream.py file by commenting out the line that sets my_stream_name to the ExampleInputStream and uncommenting the line that sets the my_stream_name to the ExampleOutputStream
+
+![screenshot](images/read7.png)
+
+* Save the changes
+
+![screenshot](images/read7b.png)
+
+* Run the file in a terminal tab with this command:
+
+```
+cd ~/environment/kinesis-labs/src
+python readStream.py
+
+```
+
+```
+echo INITIALS=$INITIALS
+aws kinesisanalyticsv2 list-applications
+
+aws kinesisanalyticsv2 update-application \
+      --application-name kdaj_app_$INITIALS \
+      --current-application-version-id 5
+
+```
 
 
 
