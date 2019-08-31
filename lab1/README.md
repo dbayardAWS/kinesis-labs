@@ -27,38 +27,88 @@ We will use Cloud9 for ...
 
 Learn more [here](https://aws.amazon.com/products/storage/data-lake-storage/).
 
-### Navigate to your S3 bucket
-The S3 bucket that we will use in these labs should already exist.  It was created for you in the setup instructions run by your administrator.
+### Navigate to the Cloud9 Console
 
-* In the AWS Console, use the Services menu and navigate to the S3 console.  One way to do so, is to expand the Services top menu and type "S3" in the service search field.
+* In the AWS Console, use the Services menu and navigate to the Cloud9 console.  One way to do so, is to expand the Services top menu and type "Cloud9" in the service search field.
 
-![screenshot](images/S30.png)
+![screenshot](images/C90.png)
 
-* In the S3 console, look for a bucket called "lab-introdatalake-[your_company]".  
-  * If you don't see a "lab-introdatalake-[your_company]" bucket, then your site administrator should re-visit the Lab Setup instructions.
+### Create a Cloud9 development environment
 
-![screenshot](images/S31.png)
+* In the Cloud9 console, click on "Create environment".  
 
-* Click on the "lab-introdatalake-[your_company]" bucket.
+* Enter "kdaj-[your_initials]" for the name.
 
-![screenshot](images/S32.png)
+Note: As multiple users may be using the same account bucket in the labs, please use your initials when creating/naming the environment.
 
-### Create folders in the S3 bucket to capture your data lake structure
-For this lab, we will define a folder hierarchy for our data lake.  At the top-level, we will have separate folders for "raw" datasets and for "processed" datasets.  Within each of those folders, we will use sub-folders to indicate the dataset name.  In short, we are implementing a hierarchy structure of Lifecycle then Data Type for this example data lake.  If you are curious, you can read more about Data Lake hierarchy design at the [AWS Data Lake Reference Architecture site](https://github.com/aws-samples/aws-dbs-refarch-datalake/tree/master/src/storage-foundation).
+* Fill-in a description.
 
-Note: As multiple users may be using the same S3 bucket in the labs, please use your initials when creating/naming folders.
+* Click "Next Step"
 
-* Click on "Create folder"
-* Enter the name "raw_[initials]", where [initials] is your initials.
+![screenshot](images/C91.png)
 
-![screenshot](images/S33.png)
+* On the "Configure settings" page, leave the defaults as-is.
 
-* Click Save to create the raw_db folder.
-* Repeat the above process to create a 2nd folder called "processed_[initials]".
+* Click "Next Step"
 
-![screenshot](images/S34.png)
+![screenshot](images/C92.png)
 
-### Download sample dataset
+* Click "Create Environment"
+
+![screenshot](images/C93.png)
+
+A new browser tab will open for your new environment.  It will take a few minutes for the environment to be ready.   While waiting, you can review the Cloud9 IDE tutorial in the step below.
+
+### Get familiar with Cloud9
+If new to Cloud9, review the IDE tutorial at [https://docs.aws.amazon.com/cloud9/latest/user-guide/tutorial.html#tutorial-tour-ide](https://docs.aws.amazon.com/cloud9/latest/user-guide/tutorial.html#tutorial-tour-ide)
+
+
+### Configure your Cloud9 environment for the prerequisites
+
+* Open up your Cloud9 environment if not already open
+
+![screenshot](images/prereq1.png)
+
+* Click on the + sign to use the pop-up menu to open a new Terminal tab
+
+![screenshot](images/prereq2.png)
+
+* In the terminal, paste and run the following code to setup the java 1.8 environment.
+
+```
+sudo yum -y update
+sudo yum -y install java-1.8.0-openjdk-devel
+sudo update-alternatives --set javac /usr/lib/jvm/java-1.8.0-openjdk.x86_64/bin/javac
+sudo update-alternatives --set java /usr/lib/jvm/jre-1.8.0-openjdk.x86_64/bin/java
+java -version
+```
+
+![screenshot](images/prereq3.png)
+
+* In the terminal, paste and run the following code to setup the Maven environment.
+
+```
+sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
+sudo yum install -y apache-maven
+mvn -version
+```
+
+![screenshot](images/prereq4.png)
+
+* In the terminal, paste and run the following code to setup the Flink 1.6.2 environment and to compile the Kinesis connector for Flink.
+
+```
+wget https://github.com/apache/flink/archive/release-1.6.2.zip
+unzip release-1.6.2.zip
+cd flink-release-1.6.2
+mvn clean package -B -DskipTests -Dfast -Pinclude-kinesis -pl flink-connectors/flink-connector-kinesis
+```
+
+![screenshot](images/prereq5.png)
+
+
+### Download our sample code
 These labs will use the public Amazon Customer Reviews dataset. Amazon Customer Reviews (a.k.a. Product Reviews) is one of Amazon’s iconic products. In a period of over two decades since the first review in 1995, millions of Amazon customers have contributed over a hundred million reviews to express opinions and describe their experiences regarding products on the Amazon.com website.  Find out more about the dataset [here](https://s3.amazonaws.com/amazon-reviews-pds/readme.html).
 
 
