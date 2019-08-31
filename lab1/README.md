@@ -81,6 +81,7 @@ sudo yum -y install java-1.8.0-openjdk-devel
 sudo update-alternatives --set javac /usr/lib/jvm/java-1.8.0-openjdk.x86_64/bin/javac
 sudo update-alternatives --set java /usr/lib/jvm/jre-1.8.0-openjdk.x86_64/bin/java
 java -version
+
 ```
 
 ![screenshot](images/prereq3.png)
@@ -92,6 +93,7 @@ sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-mav
 sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
 sudo yum install -y apache-maven
 mvn -version
+
 ```
 
 ![screenshot](images/prereq4.png)
@@ -103,6 +105,7 @@ wget https://github.com/apache/flink/archive/release-1.6.2.zip
 unzip release-1.6.2.zip
 cd flink-release-1.6.2
 mvn clean package -B -DskipTests -Dfast -Pinclude-kinesis -pl flink-connectors/flink-connector-kinesis
+
 ```
 
 ![screenshot](images/prereq5.png)
@@ -111,16 +114,46 @@ mvn clean package -B -DskipTests -Dfast -Pinclude-kinesis -pl flink-connectors/f
 ### Download our sample code
 Find out more about the sample code [here](https://docs.aws.amazon.com/kinesisanalytics/latest/java/get-started-exercise.html).
 
+Note: We have tweaked the examples slightly.
+
 * In the terminal, paste and run the following code to setup the Flink 1.6.2 environment and to compile the Kinesis connector for Flink.
 
 ```
 cd ~/environment
+git clone https://github.com/dbayardAWS/kinesis-labs.git
+```
+
+![screenshot](images/clone1.png)
+
+* In the navigator on the left-hand side, expand the kinesis-labs folder, then the src folder, all the way as shown in the below screensot until you get to the BasicStreamingJob.java file.  Double-click on the file to open it in a tab in the editor.
+
+![screenshot](images/clone2.png)
+
+## Create Kinesis Streams for input and output
+
+```
+# change DB to your initials before running this
+export INITIALS=DB
 
 ```
 
-* Download a portion of the dataset to your local computer from [https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Kitchen_v1_00.tsv.gz](https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Kitchen_v1_00.tsv.gz).  This dataset contains reviews for products in the Kitchen product category.  Save the dataset file somewhere where you can easily find it later.
+![screenshot](images/stream1.png)
 
-![screenshot](images/Download.png)
+```
+echo Initials=$INITIALS
+aws kinesis create-stream \
+--stream-name ExampleInputStream$INITIALS \
+--shard-count 1 \
+--region us-east-1
+
+aws kinesis create-stream \
+--stream-name ExampleOutputStream$INITIALS \
+--shard-count 1 \
+--region us-east-1
+
+```
+
+![screenshot](images/stream2.png)
 
 ### Upload the sample dataset to the Data Lake
 There are many ways to get new datasets into S3.  In this lab, we will use the S3 console to upload a dataset via the web browser.
