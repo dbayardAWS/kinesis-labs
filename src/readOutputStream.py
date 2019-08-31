@@ -3,13 +3,14 @@ import json
 from datetime import datetime
 import time
 
-# used https://www.arundhaj.com/blog/getting-started-kinesis-python.html as a starting point
-# merged in some code from https://aws.amazon.com/blogs/big-data/snakes-in-the-stream-feeding-and-eating-amazon-kinesis-streams-with-python/
+#
+# Change the name of the my_stream_name parameter to append your Initials (line 10/11)
+#
 
+my_stream_name = 'ExampleInputStream'
+# my_stream_name = 'ExampleOutputStream'
 
-my_stream_name = 'ExampleOutputStream'
-
-kinesis_client = boto3.client('kinesis', region_name='us-east-1')
+kinesis_client = boto3.client('kinesis')
 
 response = kinesis_client.describe_stream(StreamName=my_stream_name)
 
@@ -28,13 +29,15 @@ while 'NextShardIterator' in record_response:
     record_response = kinesis_client.get_records(ShardIterator=record_response['NextShardIterator'],
                                                   Limit=25)
 
-    print record_response["MillisBehindLatest"]
+    # print (record_response["MillisBehindLatest"]);
     
     for o in record_response["Records"]:
          # jdat = json.loads(o["Data"])
          jdat = o["Data"]
-         print jdat
+         print (jdat);
 
     # wait for 5 seconds
     # time.sleep(5)
     
+# used https://www.arundhaj.com/blog/getting-started-kinesis-python.html as a starting point
+# merged in some code from https://aws.amazon.com/blogs/big-data/snakes-in-the-stream-feeding-and-eating-amazon-kinesis-streams-with-python/

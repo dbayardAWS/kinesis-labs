@@ -15,15 +15,18 @@ import java.util.Properties;
 /**
  * A basic Kinesis Data Analytics for Java application with Kinesis data
  * streams as source and sink.
+ * 
+ * Be sure to append your Initials to the inputStreamName and outputStreamName (lines 24 and 25)
+ * 
  */
 public class BasicStreamingJob {
-    private static final String region = "us-west-2";
+    private static final String region = "us-east-1";
     private static final String inputStreamName = "ExampleInputStream";
     private static final String outputStreamName = "ExampleOutputStream";
 
     private static DataStream<String> createSourceFromStaticConfig(StreamExecutionEnvironment env) {
         Properties inputProperties = new Properties();
-        inputProperties.setProperty(ConsumerConfigConstants.AWS_REGION, region);
+        // inputProperties.setProperty(ConsumerConfigConstants.AWS_REGION, region);
         inputProperties.setProperty(ConsumerConfigConstants.STREAM_INITIAL_POSITION, "LATEST");
 
         return env.addSource(new FlinkKinesisConsumer<>(inputStreamName, new SimpleStringSchema(), inputProperties));
@@ -37,7 +40,7 @@ public class BasicStreamingJob {
 
     private static FlinkKinesisProducer<String> createSinkFromStaticConfig() {
         Properties outputProperties = new Properties();
-        outputProperties.setProperty(ConsumerConfigConstants.AWS_REGION, region);
+        // outputProperties.setProperty(ConsumerConfigConstants.AWS_REGION, region);
         outputProperties.setProperty("AggregationEnabled", "false");
 
         FlinkKinesisProducer<String> sink = new FlinkKinesisProducer<>(new SimpleStringSchema(), outputProperties);

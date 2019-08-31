@@ -3,6 +3,10 @@ import boto3
 import random
 import datetime
 
+#
+# Be sure to edit the StreamName (line25) and append your initials
+#
+
 kinesis = boto3.client('kinesis')
 def getReferrer():
     data = {}
@@ -21,4 +25,3 @@ while True:
                 StreamName="ExampleInputStream",
                 Data=data,
                 PartitionKey="partitionkey")
-                
