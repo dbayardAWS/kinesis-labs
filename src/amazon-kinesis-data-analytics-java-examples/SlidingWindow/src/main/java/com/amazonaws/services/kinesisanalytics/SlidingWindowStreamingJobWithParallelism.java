@@ -16,8 +16,15 @@ import java.util.Properties;
 
 /**
  * A Kinesis Data Analytics for Java application that calculates minimum stock
- * price for all stock symbols in a given Kinesis stream over a sliding window
- * and overrides the operator level parallelism in the flink application.
+ * price for all stock symbols in a given Kinesis stream over a sliding window.
+ * 
+ * Based on the example at https://docs.aws.amazon.com/kinesisanalytics/latest/java/examples-sliding.html , but modified for readability.
+ *
+ * Be sure to append your Initials to the inputStreamName and outputStreamName (lines 44 and 45)
+ *
+ * And if not using the us-east-1 region, modify line 43
+
+ * This example also overrides the operator level parallelism in the flink application.
  * <p>
  * Note that the maximum parallelism in the Flink code cannot be greater than
  * provisioned parallelism (default is 1). To get this application to work,
@@ -33,7 +40,7 @@ import java.util.Properties;
  *      --application-configuration-update "{\"FlinkApplicationConfigurationUpdate\": { \"ParallelismConfigurationUpdate\": {\"ParallelismUpdate\": 5, \"ConfigurationTypeUpdate\": \"CUSTOM\" }}}"
  */
 public class SlidingWindowStreamingJobWithParallelism {
-    private static final String region = "us-west-2";
+    private static final String region = "us-east-1";
     private static final String inputStreamName = "ExampleInputStream";
     private static final String outputStreamName = "ExampleOutputStream";
 
@@ -45,12 +52,13 @@ public class SlidingWindowStreamingJobWithParallelism {
                 "LATEST");
 
         return env.addSource(new FlinkKinesisConsumer<>(inputStreamName,
-                new SimpleStringSchema(), inputProperties));
+                new SimpleStringSchema(), inputProperties)).name(inputStreamName);
     }
 
     private static FlinkKinesisProducer<String> createSinkFromStaticConfig() {
         Properties outputProperties = new Properties();
         outputProperties.setProperty(ConsumerConfigConstants.AWS_REGION, region);
+        outputProperties.setProperty("AggregationEnabled", "false");    
 
         FlinkKinesisProducer<String> sink = new FlinkKinesisProducer<>(new
                 SimpleStringSchema(), outputProperties);
@@ -74,8 +82,8 @@ public class SlidingWindowStreamingJobWithParallelism {
                 .min(1) // Calculate minimum price per stock over the window
                 .setParallelism(3) // Set parallelism for the min operator
                 .map(value -> value.f0 + ":  (with parallelism 3) - " + value.f1.toString() + "\n")
-                .addSink(createSinkFromStaticConfig());
+                .addSink(createSinkFromStaticConfig()).name(outputStreamName);
 
-        env.execute("Min Stock Price");
+        env.execute("Min Stock Price Sliding Window");
     }
 }

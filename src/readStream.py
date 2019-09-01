@@ -37,6 +37,7 @@ while 'NextShardIterator' in record_response:
          print (jdat);
 
     # wait for 1 seconds
+    print
     time.sleep(1)
     
 # This code used https://www.arundhaj.com/blog/getting-started-kinesis-python.html as a starting point

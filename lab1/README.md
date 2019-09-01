@@ -517,7 +517,7 @@ Note: Be sure to edit both the inputStreamName and outputStreamName
 
 * Then use the File..Save menu to save the modified TumblingWindowStreamingJob.java file
 
-![screenshot](images/started3.png)
+![screenshot](images/tumbling3.png)
 
 * In your left-most Terminal tab (or open a new Terminal tab if you wish), run these commands to compile and build your KDAJ application:
 
@@ -618,8 +618,127 @@ You should see output every 5 seconds that lists a Stock Symbol and the number o
 ## Running the Sliding Window example application
 https://docs.aws.amazon.com/kinesisanalytics/latest/java/examples-sliding.html
 
+The application uses the timeWindow operator to find the minimum value for each stock symbol over a 10-second window that slides by 5 seconds
+
+The application code is located in the SlidingWindowStreamingJobWithParallelism.java file
+
+* In the navigator on the left-hand side, expand the kinesis-labs folder, then the src folder, all the way as shown in the below screensot until you get to the SlidingWindowStreamingJobWithParallelism.java file.  You may need to slide the divider between the navigator and the main editor to the right to make the navigator section wider.  Double-click on the file to open it in a tab in the editor.
+
+![screenshot](images/sliding1.png)
+
+* Find the inputStreamName and outputStreamName parameters in the java code and append your initials to the Stream name (to match the name of the kinesis streams you created with the "aws kinesis create-stream" command above).
+
+Note: Be sure to edit both the inputStreamName and outputStreamName
+
+![screenshot](images/sliding2.png)
+
+* NOTE: If you are not running in the AWS region 'us-east-1', then you need to edit the java source code to change the "region" variable to the correct region.
+
+![screenshot](images/sliding2a.png)
+
+* Then use the File..Save menu to save the modified SlidingWindowStreamingJobWithParallelism.java file
+
+![screenshot](images/tumbling3.png)
+
+* In your left-most Terminal tab (or open a new Terminal tab if you wish), run these commands to compile and build your KDAJ application:
+
+```
+cd ~/environment/kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/SlidingWindow/
+mvn package
+
+```
+
+When the code is finished running, you should see output like this:
+
+![screenshot](images/sliding4.png)
+
+At this point, our Sliding Window KDAJ application has been compiled and a jar file ready for deployment has been built.  The jar has been placed in the kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/SlidingWindow/target directory if you want to look at.
+
+### Copy the application jar file to the s3 bucket
+
+* Using the same Terminal tab, run these commands to copy the generated .jar file your KDAJ application to the s3 bucket:
+
+```
+echo lowercaseusername=$lowercaseusername
+cd ~/environment/kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/SlidingWindow/target/
+aws s3 rm s3://lab-kdaj-app-code-$lowercaseusername/java-getting-started-1.0.jar
+aws s3 cp aws-kinesis-analytics-java-apps-1.0.jar s3://lab-kdaj-app-code-$lowercaseusername/java-getting-started-1.0.jar
+
+```
+
+When the code is finished running, you should see output like this:
+
+![screenshot](images/sliding5.png)
+
+
+
+### Update our KDAJ application via the CLI to pickup the new jar file
+
+* Paste and run these commands
+
+```
+echo INITIALS=$INITIALS
+aws kinesisanalyticsv2 list-applications
+
+```
+
+* Make a note of the application-version-id in the output.  For example, in the below screenshot, the application-version-id is 3
+
+![screenshot](images/tumbling6.png)
+
+* Paste, edit, and run the following commands.  Change the current-application-version-id to be the value seen in the list-applications command.
+
+```
+aws kinesisanalyticsv2 update-application \
+      --application-name kdaj_app_$INITIALS \
+      --application-configuration-update "{\"FlinkApplicationConfigurationUpdate\": { \"ParallelismConfigurationUpdate\": {\"ParallelismUpdate\": 5, \"ConfigurationTypeUpdate\": \"CUSTOM\" }}, \"ApplicationCodeConfigurationUpdate\": { \"CodeContentUpdate\": {\"S3ContentLocationUpdate\": { \"BucketARNUpdate\": \"arn:aws:s3:::lab-kdaj-app-code-$lowercaseusername\",  \"FileKeyUpdate\": \"java-getting-started-1.0.jar\"}}}}" \
+      --current-application-version-id 2      
+```
+
+Note: In the above command, we are also updating the parallelism for our application.  More details about this are in the java source code or [here](https://docs.aws.amazon.com/kinesisanalytics/latest/java/examples-sliding.html).
+
+When you run the above code, you will see output like this:
+
+![screenshot](images/tumbling7.png)
+
+Hint: To learn more about using AWS CLI to update KDAJ applications, refer to [here](https://docs.aws.amazon.com/kinesisanalytics/latest/java/get-started-exercise.html#get-started-exercise-7)
+
+* Run this command until the ApplicationStatus changes from UPDATING to RUNNING
+
+```
+aws kinesisanalyticsv2 list-applications
+
+```
+
+Wait until you see the ApplicationStatus equal to RUNNING like this:
+
+![screenshot](images/tumbling8.png)
+
+* If you want, go to your Kinesis console and refresh the page for your KDAJ application to see the new visual Application Graph
+
+![screenshot](images/sliding9.png)
+
+
+### Test your SlidingWindow application
+
+* Run the readStream.py consumer
+
+```
+cd kinesis-labs/src
+python readStream.py
+
+```
+
+You should see output every 5 seconds that lists a Stock Symbol and the number of times during the 5 second window that the Stock Symbol appeared in the Kinesis stream.
+
+![screenshot](images/sliding10.png)
+
+* When you are ready, type ctrl-c in the terminal tab to stop the readStream.py program
+
+![screenshot](images/sliding11.png)
+
 
 ## Before You Leave
 If you are done with all of the labs, please follow the cleanup instructions to avoid having to pay for unused resources.
 
-Note: you will use the datasets created in this lab in the next lab, so don't delete them until you are finished with all of the labs.
+
