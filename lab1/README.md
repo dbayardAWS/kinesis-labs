@@ -5,10 +5,12 @@ In this lab you will setup a basic data lake environment, load some data, and be
 
 ## Contents
 * [Before You Begin](#before-you-begin)
-* [Setup your initial Data Lake on S3](#setup-your-initial-data-lake-on-s3)
-* [Catalog our new dataset](#catalog-our-new-dataset)
-* [Query our new data](#query-our-new-data)
-* [OPTIONAL Make our data faster](#optional-make-our-data-faster)
+* [Create a Cloud9 Development Environment](#Create-a-Cloud9-Development-Environment)
+* [Configure prerequisites for building Kinesis Data Analytics for Java applications](#Configure-prerequisites-for-building-Kinesis-Data-Analytics-for-Java-applications)
+* [Create Kinesis Streams for input and output and test them](#Create-Kinesis-Streams-for-input-and-output-and-test-them)
+* [Working with the Getting Started application](#Working-with-the-Getting-Started-application)
+* [Working with the Tumbling Window example application](#Working-with-the-Tumbling-Window-example-application)
+* [Working with the Sliding Window example application](#Working-with-the-Sliding-Window-example-application)
 * [Before You Leave](#before-you-leave)
 
 ## Before You Begin
@@ -63,7 +65,7 @@ Cloud9 will now create your new environment.  It will take a few minutes for the
 If you are new to Cloud9, review the IDE tutorial at [https://docs.aws.amazon.com/cloud9/latest/user-guide/tutorial-tour-ide.html](https://docs.aws.amazon.com/cloud9/latest/user-guide/tutorial-tour-ide.html)
 
 
-### Configure your Cloud9 environment for the prerequisites for building Kinesis Data Analytics for Java applications
+## Configure prerequisites for building Kinesis Data Analytics for Java applications
 Kinesis Data Analytics for Java (KDAJ) is based on Apache Flink 1.6.2.  To build applications for KDAJ, we will need to configure Java, Maven, Apache Flink, and the Flink Connector for Kinesis.  We will do that in the following steps.
 
 * Open up your Cloud9 environment if not already open
@@ -136,7 +138,7 @@ When the code is finished running, you should see output like this:
 
 
 
-## Create Kinesis Streams for input and output
+## Create Kinesis Streams for input and output and test them
 
 * In the terminal, paste and edit and run the following code to define your Initials as a shell variable in the terminal.
 
@@ -202,7 +204,7 @@ When the code is running, you should see output like this:
 Leave the stock.py producer code running in its terminal tab for now.
 
 
-### Edit and launch the readStream Consumer
+### Edit and launch the readStream.py Consumer
 
 * In the Cloud9 navigator on the left-hand side, expand the kinesis-labs folder, then the src folder.  Then double-click on the readStream.py file to open it in a tab in the editor.
 
@@ -243,7 +245,7 @@ At this point, let's stop the readStream.py consumer.
 ![screenshot](images/read6.png)
 
 
-### Edit the Getting Started KDAJ application and compile it
+## Working with the Getting Started application
 Now that we've tested that we have a working Kinesis setup, let's start with our first Kinesis Data Analytics for Java application.  We have a simple Getting Started application that we will review, compile, and ultimately deploy.
 
 * In the navigator on the left-hand side, expand the kinesis-labs folder, then the src folder, all the way as shown in the below screensot until you get to the BasicStreamingJob.java file.  You may need to slide the divider between the navigator and the main editor to the right to make the navigator section wider.  Double-click on the file to open it in a tab in the editor.
@@ -494,7 +496,7 @@ At this point, let's stop the readStream.py consumer.
 
 
 
-## Working with the Tumbling Window example
+## Working with the Tumbling Window example application
 https://docs.aws.amazon.com/kinesisanalytics/latest/java/examples-tumbling.html
 
 The application uses the timeWindow operator to find the count of stock symbols over a 5-second tumbling window.
@@ -615,7 +617,7 @@ You should see output every 5 seconds that lists a Stock Symbol and the number o
 ![screenshot](images/tumbling11.png)
 
 
-## Running the Sliding Window example application
+## Working with the Sliding Window example application
 https://docs.aws.amazon.com/kinesisanalytics/latest/java/examples-sliding.html
 
 The application uses the timeWindow operator to find the minimum value for each stock symbol over a 10-second window that slides by 5 seconds
