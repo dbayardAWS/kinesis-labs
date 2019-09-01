@@ -1,5 +1,5 @@
 # LAB 1 - Getting Started with Kinesis Data Analytics for Java
-In this lab you will setup a basic data lake environment, load some data, and begin to use it.
+In this lab you will learn how to get startd with Kinesis Data Analytics for Java applications and Apache Flink.  First, you will setup a development environment and configure the pre-requisites.  Then you will build and deploy a series of sample applications that show basic Flink functionality include the use of Sources and Sinks, Tumbling Windows, and Sliding Windows.
 
 
 
@@ -43,19 +43,19 @@ Learn more [here](https://aws.amazon.com/products/storage/data-lake-storage/).
 
 Note: As multiple users may be using the same account bucket in the labs, please use your initials when creating/naming the environment.
 
-* Fill-in a description.
+* Fill in a description.
 
-* Click "Next Step"
+* Click "Next step"
 
 ![screenshot](images/C91.png)
 
 * On the "Configure settings" page, leave the defaults as-is.
 
-* Click "Next Step"
+* Click "Next step"
 
 ![screenshot](images/C92.png)
 
-* Click "Create Environment"
+* Click "Create environment"
 
 ![screenshot](images/C93.png)
 
@@ -72,7 +72,7 @@ Kinesis Data Analytics for Java (KDAJ) is based on Apache Flink 1.6.2.  To build
 
 ![screenshot](images/prereq1.png)
 
-* Click on the + sign to use the pop-up menu to open a new Terminal tab
+* Click on the + sign to the right of the Welcome Tab and use the pop-up menu to open a new Terminal tab as shown below:
 
 ![screenshot](images/prereq2.png)
 
@@ -125,7 +125,7 @@ This lab is based on the Getting Started tutorial in the Kinesis Data Analytics 
 
 Note: We have tweaked the examples slightly for simplicity.  You can find the original version of the source code [here](https://github.com/aws-samples/amazon-kinesis-data-analytics-java-examples).
 
-* In the terminal, paste and run the following code to setup the Flink 1.6.2 environment and to compile the Kinesis connector for Flink.
+* In the terminal, paste and run the following code to download the sample code for our lab.
 
 ```
 cd ~/environment
@@ -201,7 +201,7 @@ When the code is running, you should see output like this:
 
 ![screenshot](images/stock5.png)
 
-Leave the stock.py producer code running in its terminal tab for now.
+Leave the stock.py producer code running in its terminal tab for now.  The stock.py program is now constantly sending messages to our ExampleInputStream Kinesis Data Stream.
 
 
 ### Edit and launch the readStream.py Consumer
@@ -244,6 +244,8 @@ At this point, let's stop the readStream.py consumer.
 
 ![screenshot](images/read6.png)
 
+Note: Please leave the stock.py consumer running.  If you accidentally did stop the stock.py consumer, then just restart it.
+
 
 ## Working with the Getting Started application
 Now that we've tested that we have a working Kinesis setup, let's start with our first Kinesis Data Analytics for Java application.  We have a simple Getting Started application that we will review, compile, and ultimately deploy.
@@ -266,7 +268,7 @@ Note: Be sure to edit both the inputStreamName and outputStreamName
 
 ![screenshot](images/started3.png)
 
-* In your left-most Terminal tab (or open a new Terminal tab if you wish), run these commands to compile and build your KDAJ application:
+* In your left-most Terminal tab (this is where we setup the pre-requisites and set certain environment variables like INITIALS), run these commands to compile and build your KDAJ application:
 
 ```
 cd ~/environment/kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/GettingStarted/
@@ -274,6 +276,7 @@ mvn install:install-file -Dfile=/home/ec2-user/environment/flink-release-1.6.2/f
 mvn package
 
 ```
+
 
 When the code is finished running, you should see output like this:
 
@@ -298,11 +301,15 @@ As an example, in the screenshot below, the user changed the lowercaseusername t
 
 ![screenshot](images/s30.png)
 
+* Then run paste and run the following commands to create your S3 bucket:
+
 ```
 echo lowercaseusername=$lowercaseusername
 aws s3 mb s3://lab-kdaj-app-code-$lowercaseusername
 
 ```
+
+When the code is finished running, you should see output like this:
 
 ![screenshot](images/s31.png)
 
@@ -323,6 +330,7 @@ When the code is finished running, you should see output like this:
 ![screenshot](images/s32.png)
 
 ### Use the UI to define the KDAJ application
+While the AWS CLI can be used to define your application, we will use the Kinesis Console UI to do so because it demonstrates the concepts and parameters better.  To use the CLI to create an application, you can find an example [here](https://docs.aws.amazon.com/kinesisanalytics/latest/java/get-started-exercise.html#get-started-exercise-7-cli).
 
 * In the AWS Console, use the Services menu and navigate to the Kinesis console.  One way to do so, is to expand the Services top menu and type "Kinesis" in the service search field.
 
