@@ -37,7 +37,7 @@ Learn more [here](https://aws.amazon.com/products/storage/data-lake-storage/).
 
 * In the Cloud9 console, click on "Create environment".  
 
-* Enter "kdaj-[your_initials]" for the name.
+* Enter "kdaj_[your_initials]" for the name.
 
 Note: As multiple users may be using the same account bucket in the labs, please use your initials when creating/naming the environment.
 
@@ -57,13 +57,14 @@ Note: As multiple users may be using the same account bucket in the labs, please
 
 ![screenshot](images/C93.png)
 
-A new browser tab will open for your new environment.  It will take a few minutes for the environment to be ready.   While waiting, you can review the Cloud9 IDE tutorial in the step below.
+Cloud9 will now create your new environment.  It will take a few minutes for the environment to be ready.   While waiting, you can start to review the Cloud9 IDE tutorial in the step below.
 
 ### Get familiar with Cloud9
-If new to Cloud9, review the IDE tutorial at [https://docs.aws.amazon.com/cloud9/latest/user-guide/tutorial.html#tutorial-tour-ide](https://docs.aws.amazon.com/cloud9/latest/user-guide/tutorial.html#tutorial-tour-ide)
+If you are new to Cloud9, review the IDE tutorial at [https://docs.aws.amazon.com/cloud9/latest/user-guide/tutorial-tour-ide.html](https://docs.aws.amazon.com/cloud9/latest/user-guide/tutorial-tour-ide.html)
 
 
-### Configure your Cloud9 environment for the prerequisites
+### Configure your Cloud9 environment for the prerequisites for building Kinesis Data Analytics for Java applications
+Kinesis Data Analytics for Java (KDAJ) is based on Apache Flink 1.6.2.  To build applications for KDAJ, we will need to configure Java, Maven, Apache Flink, and the Flink Connector for Kinesis.  We will do that in the following steps.
 
 * Open up your Cloud9 environment if not already open
 
@@ -84,6 +85,8 @@ java -version
 
 ```
 
+When the code is finished running, you should see output like this:
+
 ![screenshot](images/prereq3.png)
 
 * In the terminal, paste and run the following code to setup the Maven environment.
@@ -95,6 +98,8 @@ sudo yum install -y apache-maven
 mvn -version
 
 ```
+
+When the code is finished running, you should see output like this:
 
 ![screenshot](images/prereq4.png)
 
@@ -108,13 +113,15 @@ mvn clean package -B -DskipTests -Dfast -Pinclude-kinesis -pl flink-connectors/f
 
 ```
 
+When the code is finished running, you should see output like this:
+
 ![screenshot](images/prereq5.png)
 
 
-### Download our sample code
-Find out more about the sample code [here](https://docs.aws.amazon.com/kinesisanalytics/latest/java/get-started-exercise.html).
+### Download our sample code for the lab
+This lab is based on the Getting Started tutorial in the Kinesis Data Analytics for Java documentation, which you can find [here](https://docs.aws.amazon.com/kinesisanalytics/latest/java/get-started-exercise.html).
 
-Note: We have tweaked the examples slightly.
+Note: We have tweaked the examples slightly for simplicity.  You can find the original version of the source code [here](https://github.com/aws-samples/amazon-kinesis-data-analytics-java-examples).
 
 * In the terminal, paste and run the following code to setup the Flink 1.6.2 environment and to compile the Kinesis connector for Flink.
 
@@ -123,19 +130,27 @@ cd ~/environment
 git clone https://github.com/dbayardAWS/kinesis-labs.git
 ```
 
+When the code is finished running, you should see output like this:
+
 ![screenshot](images/clone1.png)
 
 
 
 ## Create Kinesis Streams for input and output
 
-```
-# change DB to your initials before running this
-export INITIALS=DB
+* In the terminal, paste and edit and run the following code to define your Initials as a shell variable in the terminal.
 
 ```
+# change DCB to your initials before running this
+export INITIALS=DCB
+
+```
+
+As an example, in the screenshot below, the user changed the INITIALS to ABC:
 
 ![screenshot](images/stream1.png)
+
+* In the terminal, then paste and run the following code to create 2 kinesis streams.  The stream names will have your initials appended to them.
 
 ```
 echo Initials=$INITIALS
@@ -148,6 +163,8 @@ aws kinesis create-stream \
 --shard-count 1 
 
 ```
+
+When the code is finished running, you should see output like this:
 
 ![screenshot](images/stream2.png)
 
@@ -178,7 +195,11 @@ python stock.py
 
 ```
 
+When the code is running, you should see output like this:
+
 ![screenshot](images/stock5.png)
+
+Leave the stock.py producer code running in its terminal tab for now.
 
 
 ### Edit and launch the readStream Consumer
@@ -187,7 +208,7 @@ python stock.py
 
 ![screenshot](images/read1.png)
 
-* Find the my_stream_name parameter in the readStream.py code and append your initials to the Stream name (to match the name of the kinesis input stream you created with the "aws kinesis create-stream" command above).
+* Find the my_stream_name parameter in the readStream.py code and append your initials to the Stream name (do this as well for the commented out line).
 
 Note: at this point, the my_stream_name should be set to the ExampleInputStream[Initials].  In a later exercise, we will point this consumer to the ExampleOutputStream but not yet.
 
@@ -209,18 +230,23 @@ python readStream.py
 
 ```
 
+When the code is running, you should see output like this:
+
 ![screenshot](images/read5.png)
 
-You should see the messages from the Kinesis stream printed out to the console.
+Congratulations!  You have a running producer sending messages to one of your Kinesis Streams and you have a running consumer reading messages from the same stream.
+
+At this point, let's stop the readStream.py consumer.
 
 * In the terminal tab running the readStream.py, type ctrl-c to stop it.
 
-![screenshot](images/read5.png)
+![screenshot](images/read6.png)
 
 
 ### Edit the Getting Started KDAJ application and compile it
+Now that we've tested that we have a working Kinesis setup, let's start with our first Kinesis Data Analytics for Java application.  We have a simple Getting Started application that we will review, compile, and ultimately deploy.
 
-* In the navigator on the left-hand side, expand the kinesis-labs folder, then the src folder, all the way as shown in the below screensot until you get to the BasicStreamingJob.java file.  Double-click on the file to open it in a tab in the editor.
+* In the navigator on the left-hand side, expand the kinesis-labs folder, then the src folder, all the way as shown in the below screensot until you get to the BasicStreamingJob.java file.  You may need to slide the divider between the navigator and the main editor to the right to make the navigator section wider.  Double-click on the file to open it in a tab in the editor.
 
 ![screenshot](images/started1.png)
 
@@ -247,17 +273,28 @@ mvn package
 
 ```
 
+When the code is finished running, you should see output like this:
+
 ![screenshot](images/started4.png)
 
-### Create an s3 bucket to upload code
+At this point, our Getting Started KDAJ application has been compiled and a jar file ready for deployment has been built.  The jar has been placed in the kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/GettingStarted/target directory if you want to look at.
 
-* Using the same Terminal tab you just used to compile/build your KDAJ application, run these 2 sets commands to create a new S3 bucket.  Be sure to redefine the lowercaseusername to your username:
+### Create an s3 bucket to upload code
+Kinesis Data Analytics for Java expects the application jar file to be located on a S3 bucket.  So, we will create a S3 bucket to hold our application.
+
+
+* Using the same Terminal tab you just used to compile/build your KDAJ application, paste and edit and run these commands to define a unique lowercase username (so that your S3 bucket name is unique).
 
 ```
+cd ~/environment
 # change "dbayard" to your username (in lowercase, no spaces) before running this
 export lowercaseusername=dbayard
 
 ```
+
+As an example, in the screenshot below, the user changed the lowercaseusername to anyuser:
+
+![screenshot](images/s30.png)
 
 ```
 echo lowercaseusername=$lowercaseusername
@@ -267,7 +304,7 @@ aws s3 mb s3://lab-kdaj-app-code-$lowercaseusername
 
 ![screenshot](images/s31.png)
 
-### copy the jar file to the s3 bucket
+### Copy the application jar file to the s3 bucket
 
 * Using the same Terminal tab, run these commands to copy the generated .jar file your KDAJ application to the s3 bucket:
 
@@ -279,9 +316,11 @@ aws s3 cp aws-kinesis-analytics-java-apps-1.0.jar s3://lab-kdaj-app-code-$lowerc
 
 ```
 
+When the code is finished running, you should see output like this:
+
 ![screenshot](images/s32.png)
 
-### use the UI to define the KDAJ application
+### Use the UI to define the KDAJ application
 
 * In the AWS Console, use the Services menu and navigate to the Kinesis console.  One way to do so, is to expand the Services top menu and type "Kinesis" in the service search field.
 
@@ -295,13 +334,13 @@ aws s3 cp aws-kinesis-analytics-java-apps-1.0.jar s3://lab-kdaj-app-code-$lowerc
 
 * On the Create Application page, enter "kdaj_app_INTITALS" for the application name, where your replace INITIALS with your initials.
 
-* Enter a description of your liking
+  * Enter a description of your liking
 
-* Choose Apache Flink 1.6 for the Runtime
+  * Choose Apache Flink 1.6 for the Runtime
 
-* Leave the default of "Create / update IAM..." for the Access permisions
+  * Leave the default of "Create / update IAM..." for the Access permisions
 
-* Click Create application
+  * Click Create application
 
 ![screenshot](images/kin3.png)
 
@@ -311,62 +350,67 @@ aws s3 cp aws-kinesis-analytics-java-apps-1.0.jar s3://lab-kdaj-app-code-$lowerc
 
 * On the Configure application page, pick the S3 bucket you created earlier.  It will be named something like lab-kdaj-app-code-[lowercaseusername].
 
-* For the S3 object path, enter this value:
+  * For the S3 object path, enter this value:
 
 ```
 java-getting-started-1.0.jar
 ```
 
-* Expand Snapshots and disable them
+  * Expand Snapshots and disable them
 
-* Expand Monitoring and enable Cloudwatch Logging.  Leave the level of logging to WARN for now.
+  * Expand Monitoring and enable CloudWatch Logging.  Set the Monitoring log level to WARN.
 
-Hint: if you need to debug why your KDAJ application isn't working, you may need to change this INFO at a later point.
+Hint: if you ever need to debug why your KDAJ application isn't working, you may need to change this Monitoring log level to INFO at a later point.
 
 * Click the Update button
 
 
 ![screenshot](images/kin5.png)
+![screenshot](images/kin5a.png)
 
-* Now run the application by clicking the Run button and when it asks if you are sure, click the Run button again
 
-![screenshot](images/kin6.png)
-
-At this point, your Flink application is starting.  It may take a few minutes to start.
-
-* Wait until the Application Status says running
-
-![screenshot](images/kin7.png)
 
 ### Add permissions to the generated IAM policy for your application
 Even though the KDAJ Console generated an IAM policy for your application, the Console does not know that your java code wants to read the ExampleInputStream kinesis stream and write to the ExampleOutputStream kinesis stream.  As such, the Console UI didn't add those permissions to your applications IAM policy.
 
 Let's now edit the application's policy to add permissions so that the application can run OK.
 
+* In the Kinesis console for your KDAJ application, scroll down to the details section of the page.  Look for the IAM role section and click on the link to open the IAM role in the IAM console.
 
-Open the IAM console at https://console.aws.amazon.com/iam/.
+![screenshot](images/iam1.png)
 
-Choose Policies. Choose the kinesis-analytics-service-kdaj_app_[INITIALS]-[REGION] policy that the console created for you in the previous section.  Hint: type "kdaj" in the search box.
+* Click on "Add inline policy"
 
-On the Summary page, choose Edit policy. Choose the JSON tab.
+![screenshot](images/iam2.png)
 
-Add the highlighted section of the following policy example to the policy. Replace the sample account IDs (012345678901) with your account ID. 
-arn:aws:kinesis:us-east-1:946160804628:stream/ExampleInputStreamDB
+* Click on the JSON tab
 
+![screenshot](images/iam3.png)
+
+* Copy the following JSON and paste it over the contents in the JSON editor.  Then, you will need to make 4 edits:
+
+  * Append your initials to the stream name (you will do this for both the ExampleInputStream and the ExampleOutputStream)
+  * Replace the sample account ID (1234567890) with your account ID.  Hint: you can lookup your account ID by going back to your Kinesis console tab.  On the web page for your Kinesis Analytics application, you will see your account ID in details section as part of the Application ARN field.
+
+
+```
 {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
             "Sid": "ReadInputStream",
             "Effect": "Allow",
             "Action": "kinesis:*",
-            "Resource": "arn:aws:kinesis:us-east-1:535356700373:stream/ExampleInputStream"
+            "Resource": "arn:aws:kinesis:us-east-1:1234567890:stream/ExampleInputStream"
         },
         {
             "Sid": "WriteOutputStream",
             "Effect": "Allow",
             "Action": "kinesis:*",
-            "Resource": "arn:aws:kinesis:us-east-1:535356700373:stream/ExampleOutputStream"
+            "Resource": "arn:aws:kinesis:us-east-1:1234567890:stream/ExampleOutputStream"
         },
         {
-            "Sid": "Stmt789",
+            "Sid": "KPLCloudwatch",
             "Effect": "Allow",
             "Action": [
               "cloudwatch:PutMetricData"
@@ -375,9 +419,40 @@ arn:aws:kinesis:us-east-1:946160804628:stream/ExampleInputStreamDB
               "*"
             ]
         }
+    ]
+}        
 
+```
+
+![screenshot](images/iam4.png)
+
+* Having made the edits for your Initials and account id, then click the "Review policy" button.
+
+* Then define a name for your policy, such as "KDAJ_stream_permissions" and click "Create policy"
+
+![screenshot](images/iam5.png)
+
+### Now run your application
+
+* Navigate back to your application in the Kinesis console in the browser.
+
+* Now run the application by clicking the Run button and when it asks if you are sure, click the Run button again
+
+![screenshot](images/kin6.png)
+
+At this point, your Flink application is starting.  It will take a few minutes to start.
+
+* Wait until the Application Status says running
+
+![screenshot](images/kin7.png)
+
+* Hint: You may need to use the browser's refresh button to get the visual Application Graph to display
+
+
+![screenshot](images/kin8.png)
 
 ### Edit the readStream.py consumer
+Now that our Getting Started KDAJ application is running, let's edit our readStream.py consumer to show the contents of the ExampleOutputStream.  Our Getting Started application should be reading from the ExampleInputStream and writing to the ExampleOutputStream.
 
 * Go back to your Cloud9 IDE browser page.  Click on the existing tab for the readStream.py file.
 
@@ -397,6 +472,24 @@ python readStream.py
 
 ```
 
+
+While the code is running, you should see output like this:
+
+![screenshot](images/read8.png)
+
+Congratulations!  You have a running Kinesis Data Analytics for Java application reading messages from one of your Kinesis Streams and writing messages to a different stream.
+
+At this point, let's stop the readStream.py consumer.
+
+* In the terminal tab running the readStream.py, type ctrl-c to stop it.
+
+![screenshot](images/read6.png)
+
+
+
+
+
+### more stuff
 ```
 echo INITIALS=$INITIALS
 aws kinesisanalyticsv2 list-applications
