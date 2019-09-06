@@ -54,16 +54,17 @@ Now that you have successfully created an SSH key pair, you can create the EC2 i
 
 The CloudFormation template has created and configured an EC2 instance so that we can now start to ingest taxi trip events into the Kinesis data stream.
 
-### 1.	Connect to the EC2 instance via SSH from your laptop. You can obtain the command including the correct parameters from the Outputs section of the CloudFromation template.
+### 1.	Connect to the EC2 instance via SSH from your laptop. You can obtain the command including the correct parameters from the Outputs section of the CloudFromation template.  Note: you may need to add "-i keyname.pem" and point to your downloaded ec2 ssh keypair file.
 
 Use the command from the Outputs section, but it should look somewhat like this:
 ```
 # DO NOT COPY AND PASTE THIS COMMAND.
 # THIS IS JUST AN EXAMPLE
 # USE THE OUTPUT FROM YOUR CLOUDFORMATION TEMPLATE.
-$ ssh -C ec2-user@ec2-34-254-244-45.us-east-1.compute.amazonaws.com
+# YOU WILL NEED TO EDIT THE keyname.pem file/location.
+$ ssh -i keyname.pem -C ec2-user@ec2-34-254-244-45.us-east-1.compute.amazonaws.com
 ```
-
+ 
 Note for Windows users: Instead of the above command, you will need to follow these [instructions](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html) to use PuTTY to connect to the EC2 instance.
 
 
