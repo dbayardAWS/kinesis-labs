@@ -510,7 +510,7 @@ If you are curious how this worked, review the BasicStreamingJob.java source cod
 
 Notice that the code gets the StreamExecutionEnvironment, then creates a DataStream from a source, adds a sink, and then executes the environment.
 
-You learn more about Flink coding [here](https://ci.apache.org/projects/flink/flink-docs-release-1.6/).
+You can learn more about Flink coding [here](https://ci.apache.org/projects/flink/flink-docs-release-1.6/).
 
 At this point, let's stop the readStream.py consumer.
 
@@ -654,14 +654,24 @@ If you are curious how this worked, review the TumblingWindow.java source code, 
 ![screenshot](images/tumbling99.png)
 
 Lines 67-70 parse and tokenize the JSON into a tuple of (StockSymbol, 1.0).
+
 Line 71 partitions the DataStream by the StockSymbol, so that each Stock Symbol is calculated individually.
+
 Line 72 defines the TumblingWindow for 5 seconds.
+
 Line 73 sums the 1st (0-based) element of the tuple for each partition.  Because the 1st (0-based) element of every tuple is the number 1, this is equivalent to count the # of tuples for each StockSymbol.
+
 Line 74 translates the output to a string of the StockSymbol concatenated by of the sum from line 73.
+
 Line 75 sends the output to a sink based on our ExampleOutputStream Kinesis Stream.
 
 
-You learn more about Flink coding [here](https://ci.apache.org/projects/flink/flink-docs-release-1.6/).
+You can learn more about Flink coding [here](https://ci.apache.org/projects/flink/flink-docs-release-1.6/).
+
+
+
+
+
 
 * When you are ready, type ctrl-c in the terminal tab to stop the readStream.py program
 
@@ -816,7 +826,10 @@ Line 84 translates the output to a string of the StockSymbol concatenated by of 
 
 Line 85 sends the output to a sink based on our ExampleOutputStream Kinesis Stream.
 
-You learn more about Flink coding [here](https://ci.apache.org/projects/flink/flink-docs-release-1.6/).
+You can learn more about Flink coding [here](https://ci.apache.org/projects/flink/flink-docs-release-1.6/).
+
+
+
 
 * When you are ready, type ctrl-c in the terminal tab to stop the readStream.py program
 
