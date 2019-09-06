@@ -6,7 +6,7 @@ This GitHub project provides a series of lab exercises which help users learn ab
 ## Labs
 |Lab Name |Lab Description |
 |---- | ----|
-|[Kinesis Immersion Day Labs](materials/README.md) |Immersion Day |
+|[Kinesis Immersion Day Labs](immersionDay/README.md) |Immersion Day |
 |[Getting started with Kinesis Data Analytics for Java (Flink)](lab1/README.md) |Flink Examples |
 |[Wild Rydes Data Processing Labs](http://wild-rydes-data-processing-site.s3-website-us-east-1.amazonaws.com/) |Serverless Data Processing Workshop |
 
