@@ -30,7 +30,7 @@ We start with creating an SSH key pair so that we can connect to the instance ov
 
 Now that you have successfully created an SSH key pair, you can create the EC2 instance that you will use to ingest taxi trip events into the previously created Kinesis data stream.
 
-### 1.	Follow this [link](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=kinesis-replay-infrastructure&templateURL=https://shausma-public.s3-eu-west-1.amazonaws.com/public/cfn-templates/streaming-workshop/streaming-workshop-infrastructure.yml) to execute CloudFormation template that uses CodePipeline and CodeBuild to compile the kinesis replay Java application and to provision a EC2 instance. Select Next on the resulting dialog. 
+### 1.	Right-click on this [link](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=kinesis-replay-infrastructure&templateURL=https://shausma-public.s3-eu-west-1.amazonaws.com/public/cfn-templates/streaming-workshop/streaming-workshop-infrastructure.yml) and open it in a new tab to execute a CloudFormation template that uses CodePipeline and CodeBuild to compile the kinesis replay Java application and to provision a EC2 instance. Select Next on the resulting dialog. 
 
 ![screenshot](images/Picture7.png)
 
@@ -54,7 +54,7 @@ Now that you have successfully created an SSH key pair, you can create the EC2 i
 
 The CloudFormation template has created and configured an EC2 instance so that we can now start to ingest taxi trip events into the Kinesis data stream.
 
-### 1.	Connect to the EC2 instance via SSH. You can obtain the command including the correct parameters from the Outputs section of the CloudFromation template.
+### 1.	Connect to the EC2 instance via SSH from your laptop. You can obtain the command including the correct parameters from the Outputs section of the CloudFromation template.
 
 Use the command from the Outputs section, but it should look somewhat like this:
 ```
@@ -63,6 +63,9 @@ Use the command from the Outputs section, but it should look somewhat like this:
 # USE THE OUTPUT FROM YOUR CLOUDFORMATION TEMPLATE.
 $ ssh -C ec2-user@ec2-34-254-244-45.us-east-1.compute.amazonaws.com
 ```
+
+Note for Windows users: Instead of the above command, you will need to follow these [instructions](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html) to use PuTTY to connect to the EC2 instance.
+
 
 ### 2.	Once the connection has been established, start ingesting events into the Kinesis data stream by executing the jar file that has already been downloaded to the Ec2 instance.  You will need to fill in the name of Kinesis data stream you have created earlier as the streamName parameter.
 
@@ -77,4 +80,4 @@ $ java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamRegion us-east-1 -spee
 
 The correct command is again available from the Outputs section of the CloudFormation template, but this time you need to fill in the name of Kinesis data stream you have created earlier as the streamName parameter.
 
-## Congratulations.  Immersion Day Lab1 - Ingestion into Kinesis Data Streams is complete.
+## Congratulations.  You have completed Immersion Day Lab1 - Ingestion into Kinesis Data Streams.
