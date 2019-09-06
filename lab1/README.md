@@ -1,5 +1,5 @@
 # LAB 1 - Getting Started with Kinesis Data Analytics for Java
-In this lab you will learn how to get startd with Kinesis Data Analytics for Java applications and Apache Flink.  First, you will setup a development environment and configure the pre-requisites.  Then you will build and deploy a series of sample applications that show basic Flink functionality include the use of Sources and Sinks, Tumbling Windows, and Sliding Windows.
+In this lab you will learn how to get started with Kinesis Data Analytics for Java applications and Apache Flink.  First, you will setup a Cloud9 development environment and configure the pre-requisites.  Then you will build and deploy a series of sample applications that show basic Flink functionality include the use of Sources and Sinks, Tumbling Windows, and Sliding Windows.
 
 
 
@@ -23,11 +23,9 @@ In this lab you will learn how to get startd with Kinesis Data Analytics for Jav
 * Switch your console to the assigned [AWS Region](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RegionsAndAvailabilityZones.html).  
 
 ## Create a Cloud9 Development Environment
-Cloud9 is ...
+[AWS Cloud9](https://aws.amazon.com/cloud9/) is is a cloud-based integrated development environment (IDE) that lets you write, run, and debug your code with just a browser.
 
-We will use Cloud9 for ...
-
-Learn more [here](https://aws.amazon.com/products/storage/data-lake-storage/).
+AWS Cloud9 comes with a terminal that includes sudo privileges to the managed Amazon EC2 instance that is hosting your development environment and a preauthenticated AWS Command Line Interface. This makes it easy for you to directly access AWS services, install additional software, do a git push, or enter commands.
 
 ### Navigate to the Cloud9 Console
 
@@ -139,6 +137,9 @@ When the code is finished running, you should see output like this:
 
 
 ## Create Kinesis Streams for input and output and test them
+In this section, we will create some Kinesis Data Streams and test them with some python producer and consumer programs that we will run in our Cloud9 ec2 instance.
+
+![screenshot](images/arch1.png)
 
 * In the terminal, paste and edit and run the following code to define your Initials as a shell variable in the terminal.
 
@@ -171,7 +172,7 @@ When the code is finished running, you should see output like this:
 ![screenshot](images/stream2.png)
 
 
-### Edit and launch the stocks.py Provider
+### Edit and launch the stock.py Provider
 
 * In the Cloud9 navigator on the left-hand side, expand the kinesis-labs folder, then the src folder.  Then double-click on the stock.py file to open it in a tab in the editor.
 
@@ -197,11 +198,11 @@ python stock.py
 
 ```
 
-When the code is running, you should see output like this:
+When the code is running, the stock.py program is continually creating JSON messages with stock symbols and prices and sending them to the ExampleInputStream Kinesis Data Stream.  You should see output like this:
 
 ![screenshot](images/stock5.png)
 
-Leave the stock.py producer code running in its terminal tab for now.  The stock.py program is now constantly sending messages to our ExampleInputStream Kinesis Data Stream.
+Leave the stock.py producer code running in its terminal tab for now.  
 
 
 ### Edit and launch the readStream.py Consumer
@@ -238,6 +239,8 @@ When the code is running, you should see output like this:
 
 Congratulations!  You have a running producer sending messages to one of your Kinesis Streams and you have a running consumer reading messages from the same stream.
 
+![screenshot](images/arch1.png)
+
 At this point, let's stop the readStream.py consumer.
 
 * In the terminal tab running the readStream.py, type ctrl-c to stop it.
@@ -249,6 +252,10 @@ Note: Please leave the stock.py consumer running.  If you accidentally did stop 
 
 ## Working with the Getting Started application
 Now that we've tested that we have a working Kinesis setup, let's start with our first Kinesis Data Analytics for Java application.  We have a simple Getting Started application that we will review, compile, and ultimately deploy.
+
+Our first application will simply read from one Kinesis Data Stream as source and write to another Kinesis Data Stream as a sink.
+
+![screenshot](images/arch2.png)
 
 * In the navigator on the left-hand side, expand the kinesis-labs folder, then the src folder, all the way as shown in the below screensot until you get to the BasicStreamingJob.java file.  You may need to slide the divider between the navigator and the main editor to the right to make the navigator section wider.  Double-click on the file to open it in a tab in the editor.
 
@@ -495,6 +502,16 @@ While the code is running, you should see output like this:
 
 Congratulations!  You have a running Kinesis Data Analytics for Java application reading messages from one of your Kinesis Streams and writing messages to a different stream.
 
+![screenshot](images/arch2.png)
+
+If you are curious how this worked, review the BasicStreamingJob.java source code, specifically the main() code:
+
+![screenshot](images/basic1.png)
+
+Notice that the code gets the StreamExecutionEnvironment, then creates a DataStream from a source, adds a sink, and then executes the environment.
+
+You learn more about Flink coding [here](https://ci.apache.org/projects/flink/flink-docs-release-1.6/).
+
 At this point, let's stop the readStream.py consumer.
 
 * In the terminal tab running the readStream.py, type ctrl-c to stop it.
@@ -505,9 +522,17 @@ At this point, let's stop the readStream.py consumer.
 
 
 ## Working with the Tumbling Window example application
-https://docs.aws.amazon.com/kinesisanalytics/latest/java/examples-tumbling.html
+Next, we will move to a more complex example.  This example will implement a version of the classic "word count".  Specifically, the example will calculate the # of times that each stock symbol appears during each 5 second time window.
 
-The application uses the timeWindow operator to find the count of stock symbols over a 5-second tumbling window.
+![screenshot](images/arch3.png)
+
+This example is based on the TumblingWindow tutorial in the Kinesis Data Analytics for Java documentation, which you can find [here](https://docs.aws.amazon.com/kinesisanalytics/latest/java/examples-tumbling.html).
+
+Note: We have tweaked the examples slightly for simplicity.  You can find the original version of the source code [here](https://github.com/aws-samples/amazon-kinesis-data-analytics-java-examples).
+
+The application uses the timeWindow operator to find the count of stock symbols over a 5-second tumbling window.  Learn more about Windows in Flink [here](https://flink.apache.org/news/2015/12/04/Introducing-windows.html).
+
+![screenshot](https://flink.apache.org/img/blog/window-intro/window-tumbling-window.png)
 
 The application code is located in the TumblingWindowStreamingJob.java file
 
@@ -620,15 +645,41 @@ You should see output every 5 seconds that lists a Stock Symbol and the number o
 
 ![screenshot](images/tumbling10.png)
 
+Congratulations, you have successfully run the TumblingWindow example.
+
+![screenshot](images/arch3.png)
+
+If you are curious how this worked, review the TumblingWindow.java source code, specifically the main() code:
+
+![screenshot](images/tumbling99.png)
+
+Lines 67-70 parse and tokenize the JSON into a tuple of (StockSymbol, 1.0).
+Line 71 partition the DataStream by the StockSymbol, so that each Stock Symbol is calculated individually.
+Line 72 defines the TumblingWindow for 5 seconds.
+Line 73 sums the 1st (0-based) element of the tuple for each partition.  Because the 1st (0-based) element of every tuple is the number 1, this is equivalent to count the # of tuples for each StockSymbol.
+Line 74 translates the output to a string of the StockSymbol concatenated by of the sum from line 73.
+Line 75 sends the output to a sink based on our ExampleOutputStream Kinesis Stream.
+
+
+You learn more about Flink coding [here](https://ci.apache.org/projects/flink/flink-docs-release-1.6/).
+
 * When you are ready, type ctrl-c in the terminal tab to stop the readStream.py program
 
 ![screenshot](images/tumbling11.png)
 
 
 ## Working with the Sliding Window example application
-https://docs.aws.amazon.com/kinesisanalytics/latest/java/examples-sliding.html
+Now, we will test a different kind of Window- the Sliding Window.  This example will calculate the minimum price for each stock symbol over a 10-second window that slides by 5 seconds.  This example also introduces parallelism and how to configure it.
 
-The application uses the timeWindow operator to find the minimum value for each stock symbol over a 10-second window that slides by 5 seconds
+![screenshot](images/arch4.png)
+
+This example is based on the SlidingWindow tutorial in the Kinesis Data Analytics for Java documentation, which you can find [here](https://docs.aws.amazon.com/kinesisanalytics/latest/java/examples-sliding.html.
+
+Note: We have tweaked the examples slightly for simplicity.  You can find the original version of the source code [here](https://github.com/aws-samples/amazon-kinesis-data-analytics-java-examples).
+
+To learn more about Windows in Flink, you can go [here](https://flink.apache.org/news/2015/12/04/Introducing-windows.html).
+
+![screenshot](https://flink.apache.org/img/blog/window-intro/window-sliding-window.png)
 
 The application code is located in the SlidingWindowStreamingJobWithParallelism.java file
 
@@ -739,9 +790,27 @@ python readStream.py
 
 ```
 
-You should see output every 5 seconds that lists a Stock Symbol and the number of times during the 5 second window that the Stock Symbol appeared in the Kinesis stream.
+You should see output every 5 seconds that lists a Stock Symbol and the minimum price of the Stock Symbol over the last 10 seconds.
 
 ![screenshot](images/sliding10.png)
+
+Congratulations, you have successfully run the Sliding Window example.
+
+![screenshot](images/arch4.png)
+
+If you are curious how this worked, review the SlidingWindowJobWithParallelism.java source code, specifically the main() code:
+
+![screenshot](images/sliding99.png)
+
+Lines 76-79 parse and tokenize the JSON into a tuple of (StockSymbol, Price).
+Line 80 partition the DataStream by the StockSymbol, so that each Stock Symbol is calculated individually.
+Line 81 defines the Sliding Window for 10 seconds calculated every 5 seconds.
+Line 82 finds the minimum of the 1st (0-based) element of the tuple for each partition.  Because the 1st (0-based) element of every tuple is the price, this is equivalent to finding the minimum price for each StockSymbol.
+Line 83 sets the Parallelism to a non-default value (just to show how to do it).
+Line 84 translates the output to a string of the StockSymbol concatenated by of the minimum from line 82.
+Line 85 sends the output to a sink based on our ExampleOutputStream Kinesis Stream.
+
+You learn more about Flink coding [here](https://ci.apache.org/projects/flink/flink-docs-release-1.6/).
 
 * When you are ready, type ctrl-c in the terminal tab to stop the readStream.py program
 
