@@ -654,7 +654,7 @@ If you are curious how this worked, review the TumblingWindow.java source code, 
 ![screenshot](images/tumbling99.png)
 
 Lines 67-70 parse and tokenize the JSON into a tuple of (StockSymbol, 1.0).
-Line 71 partition the DataStream by the StockSymbol, so that each Stock Symbol is calculated individually.
+Line 71 partitions the DataStream by the StockSymbol, so that each Stock Symbol is calculated individually.
 Line 72 defines the TumblingWindow for 5 seconds.
 Line 73 sums the 1st (0-based) element of the tuple for each partition.  Because the 1st (0-based) element of every tuple is the number 1, this is equivalent to count the # of tuples for each StockSymbol.
 Line 74 translates the output to a string of the StockSymbol concatenated by of the sum from line 73.
@@ -803,11 +803,17 @@ If you are curious how this worked, review the SlidingWindowJobWithParallelism.j
 ![screenshot](images/sliding99.png)
 
 Lines 76-79 parse and tokenize the JSON into a tuple of (StockSymbol, Price).
-Line 80 partition the DataStream by the StockSymbol, so that each Stock Symbol is calculated individually.
+
+Line 80 partitions the DataStream by the StockSymbol, so that each Stock Symbol is calculated individually.
+
 Line 81 defines the Sliding Window for 10 seconds calculated every 5 seconds.
+
 Line 82 finds the minimum of the 1st (0-based) element of the tuple for each partition.  Because the 1st (0-based) element of every tuple is the price, this is equivalent to finding the minimum price for each StockSymbol.
+
 Line 83 sets the Parallelism to a non-default value (just to show how to do it).
+
 Line 84 translates the output to a string of the StockSymbol concatenated by of the minimum from line 82.
+
 Line 85 sends the output to a sink based on our ExampleOutputStream Kinesis Stream.
 
 You learn more about Flink coding [here](https://ci.apache.org/projects/flink/flink-docs-release-1.6/).
