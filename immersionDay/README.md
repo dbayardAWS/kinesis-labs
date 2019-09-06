@@ -6,7 +6,7 @@ This GitHub project provides a series of lab exercises which help users learn ab
 ## Labs
 |# |Lab Name |Lab Description |
 |---- |---- | ----|
-|1 |[Ingest with Kinesis Data Streams](Lab1ingest.pdf) |Kinesis Data Streams |
+|1 |[Ingest with Kinesis Data Streams](Lab1streams/README.md) |Kinesis Data Streams |
 |2 |[Store with Kinesis Data Firehose](cleanup/README.md) |Kinesis Data Firehose |
 |3 |[Analyze with Kinesis Data Analytics](cleanup/README.md) |Kinesis Data Analytics (SQL) |
 |4 |[Analyze with Kinesis Data Analytics for Java](cleanup/README.md) |Kinesis Data Analytics (Flink/Java) |
