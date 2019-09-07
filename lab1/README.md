@@ -1,6 +1,13 @@
 # LAB 1 - Getting Started with Kinesis Data Analytics for Java
 In this lab you will learn how to get started with Kinesis Data Analytics for Java applications and Apache Flink.  First, you will setup a Cloud9 development environment and configure the pre-requisites.  Then you will build and deploy a series of sample applications that show basic Flink functionality include the use of Sources and Sinks, Tumbling Windows, and Sliding Windows.
 
+With Amazon [Kinesis Data Analytics for Java Applications](https://docs.aws.amazon.com/kinesisanalytics/latest/java/what-is.html), you can use Java to process and analyze streaming data. The service enables you to author and run Java code against streaming sources to perform time-series analytics, feed real-time dashboards, and create real-time metrics. 
+
+You can build Java applications in Kinesis Data Analytics using open-source libraries based on [Apache Flink](https://flink.apache.org/). Apache Flink is a popular framework and engine for processing data streams.
+
+Kinesis Data Analytics provides the underlying infrastructure for your Apache Flink applications. It handles core capabilities like provisioning compute resources, parallel computation, automatic scaling, and application backups (implemented as checkpoints and snapshots). You can use the high-level Flink programming features (such as operators, sources, and sinks) in the same way that you use them when hosting the Flink infrastructure yourself. 
+
+For more information, see [Kinesis Data Analytics for Java Applications: How it Works](https://docs.aws.amazon.com/kinesisanalytics/latest/java/how-it-works.html).
 
 
 ## Contents
@@ -15,9 +22,6 @@ In this lab you will learn how to get started with Kinesis Data Analytics for Ja
 
 ## Before You Begin
 * Determine and capture the following information.
-  * [Your_AWS_Account_Id]
-  * [Your_AWS_User_Name]
-  * [Your_AWS_Password]
   * [AWS_Region_to_be_used_for_Lab]
 * Login to the [AWS Console](https://console.aws.amazon.com/). 
 * Switch your console to the assigned [AWS Region](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RegionsAndAvailabilityZones.html).  
@@ -533,6 +537,7 @@ Note: We have tweaked the examples slightly for simplicity.  You can find the or
 The application uses the timeWindow operator to find the count of stock symbols over a 5-second tumbling window.  Learn more about Windows in Flink [here](https://flink.apache.org/news/2015/12/04/Introducing-windows.html).
 
 ![screenshot](https://flink.apache.org/img/blog/window-intro/window-tumbling-window.png)
+The above diagram is from the Flink web page on Windows.
 
 The application code is located in the TumblingWindowStreamingJob.java file
 
@@ -690,6 +695,7 @@ Note: We have tweaked the examples slightly for simplicity.  You can find the or
 To learn more about Windows in Flink, you can go [here](https://flink.apache.org/news/2015/12/04/Introducing-windows.html).
 
 ![screenshot](https://flink.apache.org/img/blog/window-intro/window-sliding-window.png)
+The above diagram is from the Flink web page on Windows.
 
 The application code is located in the SlidingWindowStreamingJobWithParallelism.java file
 
