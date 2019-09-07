@@ -31,6 +31,9 @@ In the previous section, you’ve created a Kinesis data stream and started to i
 
 ### 7.	In the dropdown menu for the type of the attribute trip_id, change the type from INT to BIGINT. Moreover, change the Length of the attribute type from 4 to 9. Complete this step by pressing Save schema and update stream samples. It may take a minute until the operation completes.
 
+Note: If the length of the type attribute is already >=9, then you can leave the length as it is.
+
+
 ![screenshot](images/Picture9.png)
 
 ### 8.	Verify, that the incoming events are successfully mapped to the corrected schema and click on Exit (done). 
@@ -100,7 +103,7 @@ CREATE OR REPLACE PUMP statistics_pump AS
 
 ![screenshot](images/Picture13.png)
 
-### 13.	Extend the existing program by adding the following code in addition to the already existing one.
+### 13.	Extend the existing program by append the following code to the bottom of the existing SQL.
 
 ```
 CREATE OR REPLACE STREAM trip_statistics_anomaly_tmp (
@@ -146,6 +149,6 @@ CREATE OR REPLACE PUMP trip_statistics_anomaly_48min_pump AS
 
 ![screenshot](images/Picture15.png)
 
-The random cut forest algorithm takes a couple of minutes to initialize. Once the initialization phase has completed, you should see a meaningful ANOMALY_SCORE value and ANOMALY_SCORE_EXPLANATION. 
+The random cut forest algorithm takes a couple of minutes to initialize (during which the ANOMALY_SCORE will be zero). Once the initialization phase has completed, you should see a meaningful ANOMALY_SCORE value and ANOMALY_SCORE_EXPLANATION. 
 
 ## Congratulations.  You have completed Immersion Day Lab3 - Clean, Aggregate, and Enrich Events with Kinesis Data Analytics SQL.

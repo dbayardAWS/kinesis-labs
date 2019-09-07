@@ -12,9 +12,8 @@ In this section, we create an Amazon Kinesis Data Stream and populate the stream
 
 ![screenshot](images/Picture3.png)
 
-Now that the Kinesis data stream has been created, we want to ingest historic taxi trip events into the data stream. To this end, we will launch a CloudFormation template that compiles a kinesis replay Java application and load it onto an EC2 instance.  First, we will need to have an EC2 SSH Key Pair as the CloudFormation template will need that.
+Now that the Kinesis data stream has been created, we want to ingest historic taxi trip events into the data stream. To this end, we will launch a CloudFormation template that compiles a kinesis replay Java application and loads it onto an EC2 instance.  First, we will need to have an EC2 SSH Key Pair as the CloudFormation template will need that.
 
-We start with creating an SSH key pair so that we can connect to the instance over SSH. You can skip to the next section if you have created an SSH key pair previously.
 
 ### 1.	Navigate to the EC2 service and choose Key Pairs in the navigation bar on the left. 
 
@@ -40,7 +39,7 @@ Now that you have successfully created an SSH key pair, you can create the EC2 i
 
 ### 3.	On the next dialog for Step 3, leave all parameters set to their default and select Next. 
 
-### 4.	On the last page of the dialog, confirm that CloudFormation may create IAM resource and create nested CloudFormation stacks by selecting the checkbox I acknowledge that AWS CloudFormation might create IAM resources and I acknowledge that AWS CloudFormation might require the following capability: CAPABILITY_AUTO_EXPAND. Finally select Create stack at the bottom of the page.
+### 4.	On the last page of the dialog, confirm that CloudFormation may create IAM resource and create nested CloudFormation stacks by selecting the checkbox "I acknowledge that AWS CloudFormation might create IAM resources" and "I acknowledge that AWS CloudFormation might require the following capability: CAPABILITY_AUTO_EXPAND". Finally select Create stack at the bottom of the page.
 
 ![screenshot](images/Picture9.png)
 
@@ -54,7 +53,10 @@ Now that you have successfully created an SSH key pair, you can create the EC2 i
 
 The CloudFormation template has created and configured an EC2 instance so that we can now start to ingest taxi trip events into the Kinesis data stream.
 
-### 1.	Connect to the EC2 instance via SSH from your laptop. You can obtain the command including the correct parameters from the Outputs section of the CloudFromation template.  Note: you may need to add "-i keyname.pem" and point to your downloaded ec2 ssh keypair file.
+### 1.	Connect to the EC2 instance via SSH from your laptop. You can obtain the command including the correct parameters from the Outputs section of the CloudFromation template.  
+
+Note: you will need to add "-i keyname.pem" and point to your downloaded ec2 ssh keypair file (your filename probably will be different than keyname.pem).
+Note: you will likely also need to do a "chmod 0600 keyname.pem" on your ssh keypair file to set the right permissions.
 
 Use the command from the Outputs section, but it should look somewhat like this:
 ```
@@ -62,6 +64,7 @@ Use the command from the Outputs section, but it should look somewhat like this:
 # THIS IS JUST AN EXAMPLE
 # USE THE OUTPUT FROM YOUR CLOUDFORMATION TEMPLATE.
 # YOU WILL NEED TO EDIT THE keyname.pem file/location.
+$ chmod 0600 keyname.pem
 $ ssh -i keyname.pem -C ec2-user@ec2-34-254-244-45.us-east-1.compute.amazonaws.com
 ```
  
@@ -79,6 +82,8 @@ Use the command from the Outputs section, but it should look somewhat like this:
 $ java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamRegion us-east-1 -speedup 1440 -streamName initials-taxi-trips
 ```
 
-The correct command is again available from the Outputs section of the CloudFormation template, but this time you need to fill in the name of Kinesis data stream you have created earlier as the streamName parameter.
+Note: The almost correct command is again available from the Outputs section of the CloudFormation template, but this time you need to fill in the name of Kinesis data stream you have created earlier as the streamName parameter.
+
+![screenshot](images/Picture12.png)
 
 ## Congratulations.  You have completed Immersion Day Lab1 - Ingestion into Kinesis Data Streams.
