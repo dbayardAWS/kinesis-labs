@@ -16,14 +16,16 @@
 
 ![screen](images/Picture26.png)
 
-* Wait for the stack to get created.  While the Cloud Formation stack is creating, you can read through the steps in the [AWS Console UI](Part1UI.md) instructions to have a better idea of what the Cloud Formation template is doing behind the scenes.
+* Wait for the stack to get created.  
+
+* While the Cloud Formation stack is creating, you should read through the steps in the [AWS Console UI](Part1UI.md) instructions to have a better idea of what the Cloud Formation template is doing behind the scenes.
 
 ![screen](images/Picture27.png)
 
 
 ![screen](images/Picture28.png)
 
-Once the stack compltes creation, look into the resources in the outputs tab, and go to the respective consoles and explore the code, configuration and resources created.
+Once the stack creation is complete, look into the resources and the outputs tab, and go to the respective consoles and explore the code, configuration and resources created.
 
 ## Congratulations- You have finished Part1 of this Lab.  You can now proceed to [Part2](Part2.md)
 

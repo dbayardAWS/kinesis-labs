@@ -6,15 +6,6 @@
 
 Before we create the Kinesis Data Firehose delivery stream, lets fulfill following prerequisites that the firehouse delivery stream will need. 
 
-### Create the Glue database:
-
-* Run this command:
-
-```
-aws glue create-database --database-input '{"Name": "kinesislab"}' 
-
-```
-
 ### Create the S3 bucket:
 
 * Run this command:
@@ -23,6 +14,15 @@ aws glue create-database --database-input '{"Name": "kinesislab"}'
 # CHANGE yourname_or_id BEFORE RUNNING
 
 aws s3 mb s3://kinesislab-datalake-bucket-yourname_or_id --region us-east-1
+
+```
+
+### Create the Glue database:
+
+* Run this command:
+
+```
+aws glue create-database --database-input '{"Name": "kinesislab"}' 
 
 ```
 
@@ -349,6 +349,8 @@ aws lambda create-function --function-name NYCTaxiTrips --runtime python3.7 --ro
 ```
 
 #### Lambda configuration as a consumer for Kinesis Stream
+
+Tto illustrate the differences, we provide instructions to configue the Lambda trigger in standard (polling) and Enhanced FanOut mode.  You need to choose and run the step for at least one of these configurations.
 
 * For standard event source mapping, run this:
 

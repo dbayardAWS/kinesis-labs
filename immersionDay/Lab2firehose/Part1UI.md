@@ -20,7 +20,7 @@ Before we create the Kinesis Data Firehose delivery stream, lets fulfill followi
 
 ![screen](images/Picture3.png)
 
-* Type in the Bucket name, specify the Region and click on "Create".
+* Type in the Bucket name (such as "kinesislab-datalake-bucket-initials", where you replace "initials" with your initials), specify the Region and click on "Create".
 
 ![screen](images/Picture4.png)
 
@@ -29,7 +29,7 @@ Before we create the Kinesis Data Firehose delivery stream, lets fulfill followi
 * Go to the Athena console, in the left pane, under "Database", click on the dropdown and select the database that you created earlier through the Glue console. Paste the following sql statement in the query window and click on "Run query". Remember to replace the S3 bucket name with the name of the bucket you created earlier through the S3 console.
 
 ```
-/* BE SURE TO EDIT THE LOCATION (LAST LINE) WITH THE NAME OF YOUR S3 BUCKET */
+/* BE SURE TO EDIT THE BUCKET PART OF THE LOCATION (LAST LINE) WITH THE NAME OF YOUR S3 BUCKET */
 
 CREATE EXTERNAL TABLE `nyctaxitrips`(
   `pickup_latitude` double, 
@@ -62,7 +62,7 @@ CREATE EXTERNAL TABLE `nyctaxitrips`(
 
 ### Create Kinesis Data Firehose Delivery Stream:
 
-* Navigate to the Amazon Kinesis services and press Get Started when prompted (you may not need to complete this, if you have already used Amazon Kinesis). Select Create delivery stream to navigate to the Amazon Kinesis Data Firehose service
+* Navigate to the Amazon Kinesis console.  Select Create delivery stream to navigate to the Amazon Kinesis Data Firehose service
 
 ![screen](images/Picture6.png)
 
@@ -82,7 +82,9 @@ CREATE EXTERNAL TABLE `nyctaxitrips`(
 
 ![screen](images/Picture10.png)
 
-* Click on the dropdown next to "S3 bucket" and select the bucket that you created earlier through the S3 console. For "S3 prefix", copy and paste the following:
+* Click on the dropdown next to "S3 bucket" and select the bucket that you created earlier through the S3 console. 
+
+* For "S3 prefix", copy and paste the following:
 
 ```
 nyctaxitrips/year=!{timestamp:YYYY}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/ 
@@ -138,7 +140,7 @@ nyctaxitripserror/!{firehose:error-output-type}/year=!{timestamp:YYYY}/month=!{t
 
 ![screen](images/Picture19.png)
 
-* Click on the newly create role. Then click on "Add inline policy". Click on the "JSON" tab. Then copy and paste the json from below (remember to change the account-id to your account id and the stream name and delivery stream name to your streams). Then click on "Review policy".
+* Click on the newly create role. Then click on "Add inline policy". Click on the "JSON" tab. Then copy and paste the json from below (remember to change the accountid to your account id and the stream name and delivery stream name to your streams). Then click on "Review policy".
 
 ```
 {
@@ -193,8 +195,11 @@ The Lambda function does a few things:
 1.	It inspects the incoming message for unclean records with missing fields and filters them out.
 2.	It tries to send the clean records to Kinesis Data Firehose.
 3.	If it receives a throttling error, it determines if all the records received failed or some records failed.
-a.	If all records failed, it raises an exception, so the Lambda service can retry with the same payload (the service keeps retrying with the same payload until it receives a success). It also logs the corresponding trip ids so you can check to see if they actually made it through to the S3 bucket.
-b.	If some records failed, it retries based on the configured retries environment variable with exponential backoff. If any of the retries are successful, it returns a success. If none of the retries are successful, it raises an exception so the Lambda service can retry with the same payload. Note that in this case, there could be duplicate records sent. You can increase the number of retries or save the records somewhere to process later and move on as alternate strategies to prevent duplicates.
+   
+   If all records failed, it raises an exception, so the Lambda service can retry with the same payload (the service keeps retrying with the same payload until it receives a success). It also logs the corresponding trip ids so you can check to see if they actually made it through to the S3 bucket.
+   
+   Or, if some (but not all) records failed, it retries based on the configured retries environment variable with exponential backoff. If any of the retries are successful, it returns a success. If none of the retries are successful, it raises an exception so the Lambda service can retry with the same payload. Note that in this case, there could be duplicate records sent. You can increase the number of retries or save the records somewhere to process later and move on as alternate strategies to prevent duplicates.
+  
 
 * Go to the Lambda console and click on "Create function". 
 
