@@ -113,9 +113,9 @@ $ java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamRegion us-east-1 -spee
 
 Note: The almost correct command is again available from the Outputs section of the CloudFormation template, but this time you need to fill in the name of Kinesis data stream you have created earlier as the streamName parameter.
 
-![screenshot](images/Picture12.png)
+![screenshot](images/Picture12alt.png)
 
 ## Congratulations.  You have completed Immersion Day Lab1 - Ingestion into Kinesis Data Streams.
 
 
-Click [here](README.md) to return to Immersion Day table of contents.
+Click [here](../README.md) to return to Immersion Day table of contents.

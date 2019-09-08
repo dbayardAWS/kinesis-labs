@@ -39,3 +39,8 @@ If it has been 5 minutes, you should see some data in your S3 bucket.  If not, p
 
 
 You can also navigate to Amazon Cloudwatch Logs to look at the output of the Kinesis Data Streams trigger Lambda function. To do that, go to the Lambda console, click on the function you created, click on the “Monitoring” tab, then click on “View logs in CloudWatch”. This should take you to the Cloudwatch Logs console and you can see the log streams. Click on any one of them and scroll down to observe the lambda function execution outputs. In particular, look for the instances of throttling errors received from Kinesis Data Firehose and how the function handles them.
+
+
+
+Click [here](../README.md) to return to Immersion Day table of contents.
+

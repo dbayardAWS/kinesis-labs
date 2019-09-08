@@ -153,4 +153,4 @@ The random cut forest algorithm takes a couple of minutes to initialize (during 
 
 ## Congratulations.  You have completed Immersion Day Lab3 - Clean, Aggregate, and Enrich Events with Kinesis Data Analytics SQL.
 
-Click [here](README.md) to return to Immersion Day table of contents.
+Click [here](../README.md) to return to Immersion Day table of contents.
