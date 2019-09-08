@@ -6,7 +6,7 @@
 
 ![screen](images/StreamARN1.png)
 
-* Right click on [this link](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=NYCTaxiTripsKDFResources&templateURL=https://s3.amazonaws.com/shausma-public/public/cfn-templates/kinesis-analytics-workshop/kinesis-firehose-infrastructure.yml) and open it in a new tab to execute the CloudFormation template.
+* Right click on [this link](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=NYCTaxiTrips&templateURL=https://dave-kinesis-lab.s3.amazonaws.com/kinesis-firehose-infrastructure.yml) and open it in a new tab to execute the CloudFormation template.
 
 * Click “Next” on the first screen.
 
