@@ -83,7 +83,7 @@ $ ssh -i keyname.pem -C ec2-user@ec2-34-254-244-45.us-east-1.compute.amazonaws.c
  
 Note for Windows users: Instead of the above command, you will need to follow these [instructions](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html) to use PuTTY to connect to the EC2 instance.
 
-### [ ALTERNATE APPROACH ] As an alternative to running a SSH client on your laptop, you can also connect to the new EC2 instance using the EC2 Instance Connect feature.
+### [ ALTERNATE APPROACH ] As an alternative to running a SSH client on your laptop, you can also connect to the new EC2 instance using the [EC2 Instance Connect](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Connect-using-EC2-Instance-Connect.html) feature.
 
 Note: This feature assumes that you left the CloudFormation template ClientipAddressRange at its default of 0.0.0.0/0
 
