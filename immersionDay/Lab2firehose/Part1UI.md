@@ -69,7 +69,7 @@ CREATE EXTERNAL TABLE `nyctaxitrips`(
 
 ![screen](images/Picture6.png)
 
-* Enter a unique name for the Delivery stream name, eg, nyc-taxi-trips. For “Source”, choose “Direct PUT or other sources” as a lambda function would be used to feed events to the Kinesis Data Firehose delivery stream. Click Next.
+* Enter a unique name for the Delivery stream name, eg, nyc-taxi-trips. For “Source”, choose “Direct PUT or other sources” as we will be using a lambda function to feed events to the Kinesis Data Firehose delivery stream. Click Next.
 
 ![screen](images/Picture7.png)
 
@@ -81,7 +81,7 @@ CREATE EXTERNAL TABLE `nyctaxitrips`(
 
 ![screen](images/Picture9.png)
 
-* Select the S3 destination. I chose "S3".
+* Select destination as "S3"
 
 ![screen](images/Picture10.png)
 
@@ -92,6 +92,9 @@ CREATE EXTERNAL TABLE `nyctaxitrips`(
 ```
 nyctaxitrips/year=!{timestamp:YYYY}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/ 
 ```
+
+Note: We are using expressions in the prefix that follow the standard Hive partitioning format of "/partitionkey=value" notation.  This will make our S3 data work nicely with tools like Athena and EMR.
+
 
 * For "S3 error prefix" copy and paste the following:
 
@@ -346,9 +349,11 @@ def lambda_handler(event, context):
 
 ![screen](images/Picture23.png)
 
-* Scroll down to the "Configure triggers" section and fill in the details as shown below. First we will setup the trigger in "Standard" mode which is with "No consumer". Click "Add". Then scroll up and click "Save".
+* Scroll down to the "Configure triggers" section and fill in the details as mostly shown below. Note that if you followed the Lab1 instructions, then your Kinesis stream will be named "initials-taxi-trips" (not nyc-taxi-trips).  Also note that we will setup the trigger in "Standard" mode which is with "No consumer". Click "Add". Then scroll up and click "Save".
 
 ![screen](images/Picture24.png)
+
+We have created this Kinesis trigger to run in "Standard" mode.  If you want to see how to enable the Lambda function to run as an "EnhancedFanOut" consumer, check out the [AWS CLI Resource Creation Instructions](Part1CLI.md).
 
 ## Congratulations- You have finished Part1 of this Lab.  You can now proceed to [Part2](Part2.md)
 
