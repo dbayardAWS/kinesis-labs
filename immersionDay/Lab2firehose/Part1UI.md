@@ -4,6 +4,9 @@
 
 Before we create the Kinesis Data Firehose delivery stream, lets fulfill following prerequisites that the firehouse delivery stream will need. 
 
+*Note: if you are creating the Lab2 resources using another technique (such as via CloudFormation template), you should NOT execute the steps in this document. But you might want to read through these steps to better understand what the CloudFormation template is building on your behalf.* 
+
+
 ### Create the Glue database:
 
 * Go to the Glue console, click on "Databases" in the left pane and then click on "Add database". 

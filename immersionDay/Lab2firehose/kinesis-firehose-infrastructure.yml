@@ -1,0 +1,416 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Stack for Firehose DeliveryStream S3 Destination.
+Parameters: 
+  KDFDeliveryStreamName: 
+    Type: String
+    Default: nyc-taxi-trips
+  KDSStreamArn: 
+    Type: String
+  KDSConsumerName:
+    Type: String
+    Default: nyc-taxi-trips-cons-1
+  GlueDatabaseName:
+    Type: String
+    Default: kinesislab
+  GlueTableName:
+    Type: String
+    Default: nyctaxitrips
+  EventSourceMappingType:
+    Type: String
+    AllowedValues: 
+      - 'Standard'
+      - 'Enhanced Fan Out'
+    Default: Standard
+  ExponentialBackoffSeed:
+    Type: String
+    AllowedPattern: "(\\b([3-4][0-9]|50)\\b)"
+    ConstraintDescription: must specify an Integer between 30 and 50 inclusive.
+    Default: 35
+  NumberOfLambdaRetries:
+    Type: String
+    AllowedPattern: "(\\b([0-9]|10)\\b)"
+    ConstraintDescription: must specify an Integer between 0 and 10 inclusive.
+    Default: 3
+Conditions: 
+  StandardEventSourceMapping: !Equals [ !Ref EventSourceMappingType, Standard ]
+  EFOEventSourceMapping: !Equals [ !Ref EventSourceMappingType, 'Enhanced Fan Out' ]
+Resources:
+  GlueDatabase:
+    Type: AWS::Glue::Database
+    Properties: 
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput: 
+        Name: !Ref GlueDatabaseName
+
+  GlueTable:
+    Type: AWS::Glue::Table
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseName: !Ref GlueDatabase
+      TableInput:
+        Name: !Ref GlueTableName
+        Owner: owner
+        Retention: 0
+        StorageDescriptor:
+          Columns:
+          - Name: pickup_latitude
+            Type: double
+          - Name: pickup_longitude
+            Type: double
+          - Name: dropoff_latitude
+            Type: double
+          - Name: dropoff_longitude
+            Type: double
+          - Name: trip_id
+            Type: bigint
+          - Name: trip_distance
+            Type: double
+          - Name: passenger_count
+            Type: int
+          - Name: pickup_datetime
+            Type: timestamp
+          - Name: dropoff_datetime
+            Type: timestamp
+          - Name: total_amount
+            Type: double
+          Location: !Join 
+              - ''
+              - - 's3://'
+                - !Ref s3bucket
+                - !Ref GlueTableName
+                - '/'
+          InputFormat: org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+          OutputFormat: org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+          Compressed: false
+          NumberOfBuckets: -1
+          SerdeInfo:
+            SerializationLibrary: org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+            Parameters:
+              serialization.format: '1'
+          BucketColumns: []
+          SortColumns: []
+          StoredAsSubDirectories: false
+        PartitionKeys:
+        - Name: year
+          Type: string
+        - Name: month
+          Type: string
+        - Name: day
+          Type: string
+        - Name: hour
+          Type: string
+        TableType: EXTERNAL_TABLE
+
+
+  deliverystream:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties: 
+      DeliveryStreamName: !Ref KDFDeliveryStreamName
+      DeliveryStreamType: DirectPut
+      ExtendedS3DestinationConfiguration:
+        RoleARN: !GetAtt deliveryRole.Arn
+        BucketARN: !Join 
+          - ''
+          - - 'arn:aws:s3:::'
+            - !Ref s3bucket
+        Prefix: !Join 
+          - ''
+          - - !Ref GlueTable
+            -  '/year=!{timestamp:YYYY}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/'
+        ErrorOutputPrefix: !Join 
+          - ''
+          - - !Ref GlueTable
+            -  'error/!{firehose:error-output-type}/year=!{timestamp:YYYY}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/'
+        BufferingHints:
+          SizeInMBs: 128
+          IntervalInSeconds: 300
+        CompressionFormat: UNCOMPRESSED
+        EncryptionConfiguration:
+          NoEncryptionConfig: NoEncryption
+        CloudWatchLoggingOptions:
+          Enabled: true
+          LogGroupName: !Join
+            - ''
+            - - 'KDF-'
+              - !Ref KDFDeliveryStreamName
+          LogStreamName: S3Delivery
+        S3BackupMode: Disabled
+        DataFormatConversionConfiguration:
+          SchemaConfiguration:
+            CatalogId: !Ref AWS::AccountId
+            RoleARN: !GetAtt deliveryRole.Arn
+            DatabaseName: !Ref GlueDatabase
+            TableName: !Ref GlueTable
+            Region: !Ref AWS::Region
+            VersionId: LATEST
+          InputFormatConfiguration:
+            Deserializer:
+              OpenXJsonSerDe: {}
+          OutputFormatConfiguration:
+            Serializer:
+              ParquetSerDe: {}
+          Enabled: True
+  s3bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+
+  s3bucketLambdaFunction:
+    Type: AWS::S3::Bucket
+
+  CopyLambdaFunctionCustomResource:
+    Type: Custom::CopyLambdaFunctionCustomResource
+    Properties:
+      ServiceToken: !GetAtt 'CopyLambdaFunction.Arn'
+      DestBucket: !Ref 's3bucketLambdaFunction'
+      SourceBucket: 'shausma-public'
+      Prefix: 'public/cfn-templates/kinesis-analytics-workshop/'
+      Objects:
+        - function.zip
+
+  CopyLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Path: /
+      Policies:
+        - PolicyName: CopyLambdaFunctionZip
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource:
+                  - !Sub 'arn:aws:s3:::shausma-public/public/cfn-templates/kinesis-analytics-workshop/function.zip'
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource:
+                  - !Sub 'arn:aws:s3:::${s3bucketLambdaFunction}/public/cfn-templates/kinesis-analytics-workshop/*'
+  
+  CopyLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Copies objects from a source S3 bucket to a destination
+      Handler: index.handler
+      Runtime: python2.7
+      Role: !GetAtt 'CopyLambdaRole.Arn'
+      Timeout: 240
+      Code:
+        ZipFile: |
+          import json
+          import logging
+          import threading
+          import boto3
+          import cfnresponse
+          def copy_objects(source_bucket, dest_bucket, prefix, objects):
+              s3 = boto3.client('s3')
+              for o in objects:
+                  key = prefix + o
+                  copy_source = {
+                      'Bucket': source_bucket,
+                      'Key': key
+                  }
+                  print('copy_source: %s' % copy_source)
+                  print('dest_bucket = %s'%dest_bucket)
+                  print('key = %s' %key)
+                  s3.copy_object(CopySource=copy_source, Bucket=dest_bucket,
+                        Key=key)
+          def delete_objects(bucket, prefix, objects):
+              s3 = boto3.client('s3')
+              objects = {'Objects': [{'Key': prefix + o} for o in objects]}
+              s3.delete_objects(Bucket=bucket, Delete=objects)
+          def timeout(event, context):
+              logging.error('Execution is about to time out, sending failure response to CloudFormation')
+              cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)
+          def handler(event, context):
+              # make sure we send a failure to CloudFormation if the function
+              # is going to timeout
+              timer = threading.Timer((context.get_remaining_time_in_millis()
+                        / 1000.00) - 0.5, timeout, args=[event, context])
+              timer.start()
+              print('Received event: %s' % json.dumps(event))
+              status = cfnresponse.SUCCESS
+              try:
+                  source_bucket = event['ResourceProperties']['SourceBucket']
+                  dest_bucket = event['ResourceProperties']['DestBucket']
+                  prefix = event['ResourceProperties']['Prefix']
+                  objects = event['ResourceProperties']['Objects']
+                  if event['RequestType'] == 'Delete':
+                      delete_objects(dest_bucket, prefix, objects)
+                  else:
+                      copy_objects(source_bucket, dest_bucket, prefix, objects)
+              except Exception as e:
+                  logging.error('Exception: %s' % e, exc_info=True)
+                  status = cfnresponse.FAILED
+              finally:
+                  timer.cancel()
+                  cfnresponse.send(event, context, status, {}, None)
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Path: "/"
+      Policies:
+        - PolicyName: NYCTaxiTripsKinesisPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Sid: 'KinesisPerm1'
+                Effect: Allow
+                Action:
+                  - 'kinesis:GetShardIterator'
+                  - 'kinesis:GetRecords'
+                  - 'firehose:PutRecordBatch'
+                  - 'kinesis:DescribeStream'
+                  - 'kinesis:ListShards'
+                Resource:
+                  - !GetAtt deliverystream.Arn
+                  - !Ref KDSStreamArn
+              - Sid:  'KinesisPerm2'
+                Effect: Allow
+                Action:
+                  - 'kinesis:ListStreams'
+                  - 'kinesis:SubscribeToShard'
+                  - 'kinesis:DescribeStreamSummary'
+                  - 'firehose:ListDeliveryStreams'
+                  - 'cloudwatch:*'
+                  - 'logs:*'
+                Resource: '*'
+
+  KDSLambdaTrigger:
+    Type: AWS::Lambda::Function
+    DependsOn: CopyLambdaFunctionCustomResource
+    Properties:
+      Handler: lambda_function.lambda_handler
+      Role: !GetAtt LambdaRole.Arn
+      Runtime: python3.7
+      Environment: 
+        Variables:
+          delivery_stream_name: !Ref KDFDeliveryStreamName
+          exponential_backoff_seed: !Ref ExponentialBackoffSeed
+          number_of_retries: !Ref NumberOfLambdaRetries
+      Timeout: 100
+      Code:
+        S3Bucket: !Ref 's3bucketLambdaFunction'
+        S3Key: "public/cfn-templates/kinesis-analytics-workshop/function.zip"
+
+  StreamConsumer: 
+    Type: "AWS::Kinesis::StreamConsumer"
+    Condition: EFOEventSourceMapping
+    Properties: 
+      StreamARN: !Ref KDSStreamArn 
+      ConsumerName: !Ref KDSConsumerName
+
+  KDSLambdaTriggerEventSourceMappingStandard:
+    Type: AWS::Lambda::EventSourceMapping
+    Condition: StandardEventSourceMapping
+    DependsOn: LambdaRole
+    Properties: 
+      Enabled: true
+      EventSourceArn: !Ref KDSStreamArn
+      FunctionName: !GetAtt KDSLambdaTrigger.Arn
+      StartingPosition: LATEST
+
+  KDSLambdaTriggerEventSourceMappingEFO:
+    Type: AWS::Lambda::EventSourceMapping
+    Condition: EFOEventSourceMapping
+    DependsOn: LambdaRole
+    Properties: 
+      Enabled: true
+      EventSourceArn: !GetAtt StreamConsumer.ConsumerARN
+      FunctionName: !GetAtt KDSLambdaTrigger.Arn
+      StartingPosition: LATEST  
+
+  deliveryRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Sid: ''
+              Effect: Allow
+              Principal:
+                Service: firehose.amazonaws.com
+              Action: 'sts:AssumeRole'
+              Condition:
+                StringEquals:
+                  'sts:ExternalId': !Ref 'AWS::AccountId'
+        Path: "/"
+        Policies:
+          - PolicyName: firehose_delivery_policy
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - 's3:AbortMultipartUpload'
+                    - 's3:GetBucketLocation'
+                    - 's3:GetObject'
+                    - 's3:ListBucket'
+                    - 's3:ListBucketMultipartUploads'
+                    - 's3:PutObject'
+                  Resource:
+                    - !Join 
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - !Ref s3bucket
+                    - !Join 
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - !Ref s3bucket
+                        - '*'
+                - Effect: Allow
+                  Action: 'glue:GetTableVersions'
+                  Resource: '*'
+                - Effect: Allow
+                  Action: 'logs:PutLogEvents'
+                  Resource: 
+                  - !Join 
+                      - ''
+                      - - 'arn:aws:logs:'
+                        - !Ref 'AWS::Region'
+                        - ':'
+                        - !Ref 'AWS::AccountId'
+                        - 'log-group:/aws/kinesisfirehose/KDF-'
+                        - !Ref KDFDeliveryStreamName
+                        - ':log-stream:*'
+Outputs:
+  DeliveryStreamName:
+    Description: The name of the firehose delivery stream
+    Value: !Ref deliverystream
+  KDSTriggerLambdaFunctionName: 
+    Description: The name of the KDS Trigger Lambda function
+    Value: !Ref KDSLambdaTrigger
+  S3BucketName: 
+    Description: The name of the S3 bucket
+    Value: !Ref s3bucket
+  GlueDatabaseName: 
+    Description: The name of the Glue Database
+    Value: !Ref GlueDatabase
+  GlueTableName: 
+    Description: The name of the Glue Table
+    Value: !Ref GlueTable
+      
+
+
