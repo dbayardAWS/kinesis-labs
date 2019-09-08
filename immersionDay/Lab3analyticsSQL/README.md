@@ -2,7 +2,7 @@
 
 In the previous section, you’ve created a Kinesis data stream and started to ingest events into the data stream. In this section, you will learn how to connect Kinesis Data Analytics to your existing stream and clean, aggregate, and enrich the incoming events.
 
-![screenshot](images/Picture1.png)
+![screenshot](images/arch3.png)
 
 ### 1.	Navigate to the Amazon Kinesis services and select Create analytics application to navigate to the Amazon Kinesis Data Stream service.
 
