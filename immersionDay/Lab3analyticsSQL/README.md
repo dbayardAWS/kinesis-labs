@@ -152,3 +152,5 @@ CREATE OR REPLACE PUMP trip_statistics_anomaly_48min_pump AS
 The random cut forest algorithm takes a couple of minutes to initialize (during which the ANOMALY_SCORE will be zero). Once the initialization phase has completed, you should see a meaningful ANOMALY_SCORE value and ANOMALY_SCORE_EXPLANATION. 
 
 ## Congratulations.  You have completed Immersion Day Lab3 - Clean, Aggregate, and Enrich Events with Kinesis Data Analytics SQL.
+
+Click [here](README.md) to return to Immersion Day table of contents.

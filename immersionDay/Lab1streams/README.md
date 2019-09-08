@@ -1,6 +1,6 @@
 # Immersion Day Lab 1 - Ingest Data into a Kinesis Data Stream
 
-In this section, we create an Amazon Kinesis Data Stream and populate the stream using a historic data set of taxi trips made in NYC.
+In this section, we create an Amazon Kinesis Data Stream and populate the stream running a producer client program on an EC2 instance that streams a data set of taxi trips made in NYC.
 
 ![screenshot](images/arch1.png)
 
@@ -83,6 +83,22 @@ $ ssh -i keyname.pem -C ec2-user@ec2-34-254-244-45.us-east-1.compute.amazonaws.c
  
 Note for Windows users: Instead of the above command, you will need to follow these [instructions](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html) to use PuTTY to connect to the EC2 instance.
 
+### [ ALTERNATE APPROACH ] As an alternative to running a SSH client on your laptop, you can also connect to the new EC2 instance using the EC2 Instance Connect feature.
+
+Note: This feature assumes that you left the CloudFormation template ClientipAddressRange at its default of 0.0.0.0/0
+
+* Navigate to the EC2 Console and click on "Instances" on the left-hand column.
+
+* Click the checkbox infront of the EC2 instance named "kinesis-replay-infrastructure-producer-instance" and click the Connect button.
+
+* Choose "EC2 Instance Connect (browser-based SSH connection)" and click the Connect button.
+
+![screen](images/EC21.png)
+
+You should now be connected:
+
+![screen](images/EC22.png)
+
 
 ### 2.	Once the connection has been established, start ingesting events into the Kinesis data stream by executing the jar file that has already been downloaded to the Ec2 instance.  You will need to fill in the name of Kinesis data stream you have created earlier as the streamName parameter.
 
@@ -100,3 +116,6 @@ Note: The almost correct command is again available from the Outputs section of 
 ![screenshot](images/Picture12.png)
 
 ## Congratulations.  You have completed Immersion Day Lab1 - Ingestion into Kinesis Data Streams.
+
+
+Click [here](README.md) to return to Immersion Day table of contents.
