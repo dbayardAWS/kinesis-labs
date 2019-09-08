@@ -5,7 +5,9 @@ In this section, we create a Lambda function that reads from the Kinesis Deliver
 
 ![arch](images/arch2.png)
 
-We configure our Kinesis Firehose to write data to S3 using the parquet file format.  Parquet files have a defined schema, so as part of creating the resources for this lab we will define the schema for our taxi trips dataset using Glue/Athena (which also makes it easy to query the data once Firehouse delivers it to S3).
+Amazon Kinesis Data Firehose is the easiest way to load streaming data into data stores and analytics tools. It can capture, transform, and load streaming data into Amazon S3, Amazon Redshift, Amazon Elasticsearch Service, and Splunk, enabling near real-time analytics with existing business intelligence tools and dashboards you’re already using today. It is a fully managed service that automatically scales to match the throughput of your data and requires no ongoing administration. It can also batch, compress, and encrypt the data before loading it, minimizing the amount of storage used at the destination and increasing security.
+
+We configure our Kinesis Firehose delivary stream to write data to S3 using the parquet file format.  Parquet files have a defined schema, so as part of creating the resources for this lab we will define the schema for our taxi trips dataset using Glue/Athena (which also makes it easy to query the data once Firehouse delivers it to S3).
  
 This lab covers 3 different ways to creating the resources for the above described functionality and you can choose the approach you want to use for the Part 1 of this lab.
 
