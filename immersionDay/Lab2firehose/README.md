@@ -1,31 +1,20 @@
-# Draft Lab2 - Firehose post-Cloud Formation
+# Immersion Day Lab 2 - Process Data using a Lambda function and send to Kinesis Data Firehose
 
-## When all resources are created
-Start sending data to the Kinesis Data Streams stream created in Lab 1 (ingest) as outlined in Lab 1.  This may already be running.  If not, start it back up.
+In this section, we create an Amazon Kinesis Data Stream and populate the stream using a historic data set of taxi trips made in NYC.
 
-Once the Lambda function starts processing (note that it will process from the tip of the stream as the starting position is set to LATEST), the Kinesis Data Firehose delivery stream you created will ingest the records, buffer it, transform it to parquet and deliver it to the S3 destination under the prefix provided. The buffer is set to 5 minutes or 128 MB, which ever happens first.  So, it may be 5 minutes before you see data in S3.
+In this section, we create an Amazon Kinesis Data Firehose delivery stream and send data to it from Kinesis Delivery Stream created in lab section 1 using a Lambda trigger.  The Lambda function also filters out the spurious data in the incoming events and then sends the clean events to a Firehose Delivery Stream in batch mode (using the PutRecordBatch API). The Lambda trigger is configured both in standard (polling) and Enhanced FanOut mode to illustrate the differences between the two.
+ 
+This lab covers 3 different ways to creating the resources for the above described functionality and you can choose your approach.
 
-### Navigate to the Kinesis Console and click on the "nyc-taxi-trips" Data Firehose delivery stream
+|Approach |Description |
+|---- | ----|
+|[Cloud Formation](Part1CF.md) |Create resources using CloudFormation template (this is the easiest) |
+|[AWS Console UI](Part1UI.md) |Create resources using AWS Console (next easiest.  good for understanding what's happening.) |
+|[AWS CLI](Part1CLI.md) |Create resources using AWS CLI (Use this option only if you have a linux machine with AWS SDK installed and if you know how to use AWS profiles) |
 
-![screen](images/f1.png)
+When done with creating resources, you will proceed to Part 2 of this Lab to stream data through the Lambda function and Kinesis Firehose and validate output.
 
-### Click on the Monitoring tab and you should start to see some metrics from your Firehose delivery stream
-
-![screen](images/f2.png)
-
-### Click on the Details tab.  Scroll down to the Amazon S3 destination section.  Then click on the S3 bucket link.
-
-![screen](images/f3.png)
-
-If it has been 5 minutes, you should see some data in your S3 bucket.  If not, please wait a bit longer.
-
-![screen](images/f4.png)
-
-### Navigate into the "nyctaxitrips" folder and through the subfolders until you get to the data files in parquet format.
-
-![screen](images/f5.png)
-
-### Go to the S3 console and navigate to the bucket and prefix and locate the files.
+*Hint: If in doubt, we suggest creating resources via the [Cloud Formation](Part1CF.md) approach.  While the Cloud Formation is running, you can review the steps in the [AWS Console UI](Part1UI.md) instructions to have a better idea of what the Cloud Formation template is doing behind the scenes.*
 
 
-You can also navigate to Amazon Cloudwatch Logs to look at the output of the Kinesis Data Streams trigger Lambda function. To do that, go to the Lambda console, click on the function you created, click on the “Monitoring” tab, then click on “View logs in CloudWatch”. This should take you to the Cloudwatch Logs console and you can see the log streams. Click on any one of them and scroll down to observe the lambda function execution outputs. In particular, look for the instances of throttling errors received from Kinesis Data Firehose and how the function handles them.
+
