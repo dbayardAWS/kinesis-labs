@@ -21,11 +21,11 @@ Parameters:
 Outputs:
   KinesisReplayInstance:
     Description: SSH connection to the instance that ingests trip events into the Kinesis stream
-    Value: !Sub ssh -C ec2-user@${KinesisReplayInstance.PublicDnsName}
+    Value: !Sub ssh -C -i keyname.pem ec2-user@${KinesisReplayInstance.PublicDnsName}
 
   ProducerCommand:
     Description: Command to populate Kinesis stream with taxi trip events
-    Value: !Sub java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamRegion ${AWS::Region} -speedup 1440 -streamName ...
+    Value: !Sub java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamRegion ${AWS::Region} -speedup 1440 -streamName initials-taxi-trips
 
 Resources:
   KinesisReplayBuildStack:

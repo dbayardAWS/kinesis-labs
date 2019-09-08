@@ -2,7 +2,10 @@
 
 In this section, we create an Amazon Kinesis Data Stream and populate the stream using a historic data set of taxi trips made in NYC.
 
-![screenshot](images/Picture1.png)
+![screenshot](images/arch1.png)
+
+## Create the Kinesis Data Stream
+In this section, you will create a new Kinesis Data Stream that we will use to stream a data set of NYC taxi trips.
 
 ###  1.	Navigate to the Amazon Kinesis services and press Get Started when prompted (you may not need to complete this, if you have already used Amazon Kinesis). Select Create data stream to navigate to the Amazon Kinesis Data Stream service. 
 
@@ -14,6 +17,8 @@ In this section, we create an Amazon Kinesis Data Stream and populate the stream
 
 Now that the Kinesis data stream has been created, we want to ingest historic taxi trip events into the data stream. To this end, we will launch a CloudFormation template that compiles a kinesis replay Java application and loads it onto an EC2 instance.  First, we will need to have an EC2 SSH Key Pair as the CloudFormation template will need that.
 
+## Create an EC2 SSH Key Pair
+In this section, you will define your personal SSH Key Pair private key so you can login to the EC2 instance we will use in this lab.
 
 ### 1.	Navigate to the EC2 service and choose Key Pairs in the navigation bar on the left. 
 
@@ -28,6 +33,10 @@ Now that the Kinesis data stream has been created, we want to ingest historic ta
 ![screenshot](images/Picture6.png)
 
 Now that you have successfully created an SSH key pair, you can create the EC2 instance that you will use to ingest taxi trip events into the previously created Kinesis data stream.
+
+## Create an EC2 Instance and Build the taxi trip producer client
+In this section, you will use a CloudFormation template to build a producer client program that sends NYC taxi trip data to our Kinesis Data Stream.
+
 
 ### 1.	Right-click on this [link](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=kinesis-replay-infrastructure&templateURL=https://dave-kinesis-lab.s3.amazonaws.com/kinesis-replay-infrastructure.yml) and open it in a new tab to execute a CloudFormation template that uses CodePipeline and CodeBuild to compile the kinesis replay Java application and to provision a EC2 instance. Select Next on the resulting dialog. 
 
@@ -53,9 +62,13 @@ Now that you have successfully created an SSH key pair, you can create the EC2 i
 
 The CloudFormation template has created and configured an EC2 instance so that we can now start to ingest taxi trip events into the Kinesis data stream.
 
+
+## Connect to the new EC2 instance and run the producer client program
+In this section, you will connect to the new EC2 instance and launch the compiled java producer program.
+
 ### 1.	Connect to the EC2 instance via SSH from your laptop. You can obtain the command including the correct parameters from the Outputs section of the CloudFromation template.  
 
-Note: you will need to add "-i keyname.pem" and point to your downloaded ec2 ssh keypair file (your filename probably will be different than keyname.pem).
+Note: you will need to edit the "keyname.pem" and point to your downloaded ec2 ssh keypair file (your filename probably will be different than keyname.pem).
 Note: you will likely also need to do a "chmod 0600 keyname.pem" on your ssh keypair file to set the right permissions.
 
 Use the command from the Outputs section, but it should look somewhat like this:

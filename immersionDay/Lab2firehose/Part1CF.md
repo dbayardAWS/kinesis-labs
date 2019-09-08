@@ -2,11 +2,15 @@
 
 ## Part 1 - Create resources using CloudFormation template
 
-* Follow [this link](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=NYCTaxiTripsKDFResources&templateURL=https://s3.amazonaws.com/shausma-public/public/cfn-templates/kinesis-analytics-workshop/kinesis-firehose-infrastructure.yml) to execute the CloudFormation template.
+* Navigate to the Kinesis Console.  Then click on the "initials-taxi-trips" Data Stream you created in Lab1.  Copy to the clipboard the Stream ARN.
+
+![screen](images/StreamARN1.png)
+
+* Right click on [this link](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=NYCTaxiTripsKDFResources&templateURL=https://s3.amazonaws.com/shausma-public/public/cfn-templates/kinesis-analytics-workshop/kinesis-firehose-infrastructure.yml) and open it in a new tab to execute the CloudFormation template.
 
 * Click “Next” on the first screen.
 
-* In the next screen, copy the Stream arn of the Kinesis Data Stream "initials-taxi-trips" from Lab1 and paste it in the “KDSStreamArn” box. Accept all other defaults and click “Next”
+* In the next screen, paste the Stream ARN of the Kinesis Data Stream "initials-taxi-trips" from Lab1 in the “KDSStreamArn” box. Accept all other defaults and click “Next”
 
 ![screen](images/Picture25.png)
 
