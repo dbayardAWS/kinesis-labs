@@ -51,6 +51,8 @@ Observe that you are able to see your taxi trip data in the parquet file in S3. 
 
 ![screen](images/f8.png)
 
+This will launch a simple SQL query, which when finished will look like:
+
 ![screen](images/f9.png)
 
 Observe that you are able to query your taxi trip data via SQL using Athena.
