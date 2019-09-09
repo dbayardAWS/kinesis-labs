@@ -27,7 +27,7 @@ Once the Lambda function starts processing (note that it will process from the t
 
 ![screen](images/f3.png)
 
-If it has been 5 minutes, you should see some data in your S3 bucket.  If not, please wait a bit longer.
+If it has been 3 minutes, you should see some data in your S3 bucket.  If not, please wait a bit longer.
 
 ![screen](images/f4.png)
 
@@ -35,11 +35,28 @@ If it has been 5 minutes, you should see some data in your S3 bucket.  If not, p
 
 ![screen](images/f5.png)
 
-### Go to the S3 console and navigate to the bucket and prefix and locate the files.
+### Click on one of the parquet files.  Then choose the "Select from" tab.  Then click "Show file preview"
+
+![screen](images/f6.png)
+
+Observe that you are able to see your taxi trip data in the parquet file in S3.  Kinesis Data Firehouse has done its job.
 
 
-You can also navigate to Amazon Cloudwatch Logs to look at the output of the Kinesis Data Streams trigger Lambda function. To do that, go to the Lambda console, click on the function you created, click on the “Monitoring” tab, then click on “View logs in CloudWatch”. This should take you to the Cloudwatch Logs console and you can see the log streams. Click on any one of them and scroll down to observe the lambda function execution outputs. In particular, look for the instances of throttling errors received from Kinesis Data Firehose and how the function handles them.
 
+### Now navigate to the Athena Console.  Select the kinesisdatalab database.  Then click on the vertical ... to the right of the nyctaxitrips table and choose "Load partitions"
+
+![screen](images/f7.png)
+
+### Now click on the vertical ... the the right of the nyctaxitrips table and choose "Preview table"
+
+![screen](images/f8.png)
+
+![screen](images/f9.png)
+
+Observe that you are able to query your taxi trip data via SQL using Athena.
+
+
+## Congratulations.  You have completed Immersion Day Lab2 - Process Data using a Lambda function and send to Kinesis Data Firehose
 
 
 Click [here](../README.md) to return to Immersion Day table of contents.
