@@ -23,7 +23,7 @@ Before we create the Kinesis Data Firehose delivery stream, lets fulfill followi
 
 ![screen](images/Picture3.png)
 
-* Type in the Bucket name (such as "kinesislab-datalake-bucket-initials", where you replace "initials" with your initials), specify the Region and click on "Create".
+* Type in the Bucket name (such as "nyctaxitrips-s3bucket-initials", where you replace "initials" with your initials), specify the Region and click on "Create".
 
 ![screen](images/Picture4.png)
 
@@ -57,7 +57,7 @@ CREATE EXTERNAL TABLE `nyctaxitrips`(
  OUTPUTFORMAT 
   'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat'
  LOCATION
-  's3://kinesislab-datalake-bucket/nyctaxitrips/'
+  's3://nyctaxitrips-s3bucket-initials/nyctaxitrips/'
 
 ```
 
@@ -146,7 +146,7 @@ nyctaxitripserror/!{firehose:error-output-type}/year=!{timestamp:YYYY}/month=!{t
 
 ![screen](images/Picture19.png)
 
-* Click on the newly create role. Then click on "Add inline policy". Click on the "JSON" tab. Then copy and paste the json from below (remember to change the accountid to your account id and the stream name and delivery stream name to your streams). Then click on "Review policy".
+* Click on the newly create role. Then click on "Add inline policy". Click on the "JSON" tab. Then copy and paste the json from below (remember to change the accountid in 3 places to your account id and the "initials-taxi-trips" stream name in 2 places). Then click on "Review policy".
 
 ```
 {
@@ -161,7 +161,7 @@ nyctaxitripserror/!{firehose:error-output-type}/year=!{timestamp:YYYY}/month=!{t
                 "kinesis:DescribeStream"
             ],
             "Resource": [
-                "arn:aws:kinesis:us-east-1:<accountid>:stream/nyc-taxi-trips",
+                "arn:aws:kinesis:us-east-1:<accountid>:stream/initials-taxi-trips",
                 "arn:aws:firehose:us-east-1:<accountid>:deliverystream/nyc-taxi-trips"
             ]
         },
@@ -181,7 +181,7 @@ nyctaxitripserror/!{firehose:error-output-type}/year=!{timestamp:YYYY}/month=!{t
             "Effect": "Allow",
             "Action": "kinesis:ListShards",
             "Resource": [
-                "arn:aws:kinesis:us-east-1:<accountid>:stream/nyc-taxi-trips"
+                "arn:aws:kinesis:us-east-1:<accountid>:stream/initials-taxi-trips"
             ]
         }
     ]
@@ -349,7 +349,7 @@ def lambda_handler(event, context):
 
 ![screen](images/Picture23.png)
 
-* Scroll down to the "Configure triggers" section and fill in the details as mostly shown below. Note that if you followed the Lab1 instructions, then your Kinesis stream will be named "initials-taxi-trips" (not nyc-taxi-trips).  Also note that we will setup the trigger in "Standard" mode which is with "No consumer". Click "Add". Then scroll up and click "Save".
+* Scroll down to the "Configure triggers" section and fill in the details as mostly shown below. Note that if you followed the Lab1 instructions, then your Kinesis stream will be named "initials-taxi-trips".  Also note that we will setup the trigger in "Standard" mode which is with "No consumer". Click "Add". Then scroll up and click "Save".
 
 ![screen](images/Picture24.png)
 
