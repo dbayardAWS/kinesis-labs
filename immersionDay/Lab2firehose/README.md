@@ -17,7 +17,7 @@ This lab covers 3 different ways to creating the resources for the above describ
 |[AWS Console UI](Part1UI.md) |Create resources using AWS Console (next easiest.  good for understanding what's happening.) |
 |[AWS CLI](Part1CLI.md) |Create resources using AWS CLI (Expert only.  Use this option only if you have a linux machine with AWS SDK installed and you know how to setup/use the AWS CLI) |
 
-When done with creating resources, you will proceed to Part 2 of this Lab to stream data through the Lambda function and Kinesis Firehose and validate output on S3.
+When done with creating resources, you will proceed to [Part 2](Part2.md) of this Lab to stream data through the Lambda function and Kinesis Firehose and validate output on S3.
 
 *Hint: If in doubt, we suggest creating resources via the [Cloud Formation](Part1CF.md) approach.  While the Cloud Formation is running, you can review the steps in the [AWS Console UI](Part1UI.md) instructions to have a better idea of what the Cloud Formation template is doing behind the scenes.*
 
