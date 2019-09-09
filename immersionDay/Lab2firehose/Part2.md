@@ -6,11 +6,11 @@
 
 ```
 # CHANGE initials-taxi-trips TO YOUR ACTUAL STREAM NAME FROM LAB1
-java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamName initials-taxi-trips -streamRegion us-east-1 -speedup 3600
+java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamRegion us-east-1 -speedup 1800 -streamName initials-taxi-trips 
 
 ```
 
-Once the Lambda function starts processing (note that it will process from the tip of the stream as the starting position is set to LATEST), the Kinesis Data Firehose delivery stream you created will ingest the records, buffer it, transform it to parquet and deliver it to the S3 destination under the prefix provided. The buffer is set to 5 minutes or 128 MB, which ever happens first.  So, it may be 5 minutes before you see data in S3.
+Once the Lambda function starts processing (note that it will process from the tip of the stream as the starting position is set to LATEST), the Kinesis Data Firehose delivery stream you created will ingest the records, buffer it, transform it to parquet and deliver it to the S3 destination under the prefix provided. The buffer is set to 3 minutes or 128 MB, which ever happens first.  So, it may be 3 minutes before you see data in S3.
 
 * Wait for a few minutes (see above paragraph)
 

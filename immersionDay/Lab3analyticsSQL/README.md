@@ -90,8 +90,8 @@ CREATE OR REPLACE PUMP statistics_pump AS
             SUM(passenger_count) as passenger_count, 
             SUM(total_amount) as total_amount
         FROM cleaned_trips
-        GROUP BY STEP(cleaned_trips.ROWTIME BY INTERVAL '1' SECOND)
-        ORDER BY STEP(cleaned_trips.ROWTIME BY INTERVAL '1' SECOND);
+        GROUP BY STEP(cleaned_trips.ROWTIME BY INTERVAL '2' SECOND)
+        ORDER BY STEP(cleaned_trips.ROWTIME BY INTERVAL '2' SECOND);
 
 ```
 
@@ -137,7 +137,7 @@ CREATE OR REPLACE PUMP trip_statistics_anomaly_48min_pump AS
         SELECT STREAM trip_count, passenger_count, total_amount, anomaly_score, anomaly_explanation, '48min'
         FROM TABLE(RANDOM_CUT_FOREST_WITH_EXPLANATION(
             CURSOR(SELECT STREAM trip_count, passenger_count, total_amount FROM trip_statistics),
-            100, 256, 100000, 30, false));
+            100, 256, 100000, 24, false));
 
 ```
 

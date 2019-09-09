@@ -124,7 +124,7 @@ Resources:
             -  'error/!{firehose:error-output-type}/year=!{timestamp:YYYY}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/'
         BufferingHints:
           SizeInMBs: 128
-          IntervalInSeconds: 300
+          IntervalInSeconds: 180
         CompressionFormat: UNCOMPRESSED
         EncryptionConfiguration:
           NoEncryptionConfig: NoEncryption

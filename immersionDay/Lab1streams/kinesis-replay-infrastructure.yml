@@ -25,7 +25,7 @@ Outputs:
 
   ProducerCommand:
     Description: Command to populate Kinesis stream with taxi trip events
-    Value: !Sub java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamRegion ${AWS::Region} -speedup 1440 -streamName initials-taxi-trips
+    Value: !Sub java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamRegion ${AWS::Region} -speedup 1800 -streamName initials-taxi-trips
 
 Resources:
   KinesisReplayBuildStack:

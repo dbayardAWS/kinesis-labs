@@ -106,7 +106,7 @@ nyctaxitripserror/!{firehose:error-output-type}/year=!{timestamp:YYYY}/month=!{t
 
 ![screen](images/Picture11.png)
 
-* Specify the buffering hints for the Amazon S3 destination. Type in 128 MB and 300 seconds.
+* Specify the buffering hints for the Amazon S3 destination. Type in 128 MB and 180 seconds.
 
 ![screen](images/Picture12.png)
 

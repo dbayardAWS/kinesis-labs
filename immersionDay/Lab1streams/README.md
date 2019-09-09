@@ -108,7 +108,7 @@ Use the command from the Outputs section, but it should look somewhat like this:
 # THIS IS JUST AN EXAMPLE
 # USE THE OUTPUT FROM YOUR CLOUDFORMATION TEMPLATE.
 # AND YOU WILL NEED TO MODIFY THE intials PART OF initials-taxi-trip
-$ java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamRegion us-east-1 -speedup 1440 -streamName initials-taxi-trips
+$ java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamRegion us-east-1 -speedup 1800 -streamName initials-taxi-trips
 ```
 
 Note: The almost correct command is again available from the Outputs section of the CloudFormation template, but this time you need to replace initials-taxi-trips in the streamName parameter with the name of Kinesis data stream you have created earlier.
