@@ -2,6 +2,8 @@
 
 In this section, we create an Amazon Kinesis Data Stream and populate the stream running a producer client program on an EC2 instance that streams a data set of taxi trips made in NYC.
 
+The source code of the java replay program is available [here](https://github.com/aws-samples/amazon-kinesis-replay).
+
 ![screenshot](images/arch1.png)
 
 ## Create the Kinesis Data Stream
@@ -114,6 +116,8 @@ $ java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamRegion us-east-1 -spee
 Note: The almost correct command is again available from the Outputs section of the CloudFormation template, but this time you need to replace initials-taxi-trips in the streamName parameter with the name of Kinesis data stream you have created earlier.
 
 ![screenshot](images/Picture12alt.png)
+
+If we review what you have done, you have created an EC2 environment that can run our Java taxi trip replay producer.  Then you have connected to the EC2 instance and started the replay program.  The speedup parameter of 1800 tells our replay program to replay the taxi trips 1800x faster, which is essentially to replay 30 minutes of taxi trips every second.
 
 ## Congratulations.  You have completed Immersion Day Lab1 - Ingestion into Kinesis Data Streams.
 
