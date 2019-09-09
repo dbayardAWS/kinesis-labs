@@ -143,43 +143,40 @@ aws firehose create-delivery-stream --cli-input-json file://createdeliverystream
 
 * Create a json file named KinesisPolicy.json with the below contents. You will need to make a few edits.
 
-Note: Replace the < accountid > with your account id.
+Note: Replace the < ACCOUNT_ID > with your account id.
+
 
 ```
 {
     "Version": "2012-10-17",
-    "Statement": [{
-            "Sid": "Effect",
-            "Effect": "Allow",
+    "Statement": [
+        {
             "Action": [
                 "kinesis:GetShardIterator",
                 "kinesis:GetRecords",
                 "firehose:PutRecordBatch",
-                "kinesis:DescribeStream"
+                "kinesis:DescribeStream",
+                "kinesis:ListShards"
             ],
             "Resource": [
-                "arn:aws:kinesis:us-east-1:<accountid>:stream/nyc-taxi-trips",
-                "arn:aws:firehose:us-east-1:<accountid>:deliverystream/nyc-taxi-trips"
-            ]
+                "arn:aws:firehose:us-east-1:<ACCOUNT_ID>:deliverystream/nyc-taxi-trips",
+                "arn:aws:kinesis:us-east-1:<ACCOUNT_ID>:stream/initials-taxi-trips"
+            ],
+            "Effect": "Allow",
+            "Sid": "KinesisPerm1"
         },
         {
-            "Sid": "KinesisPerm2",
-            "Effect": "Allow",
             "Action": [
                 "kinesis:ListStreams",
                 "kinesis:SubscribeToShard",
                 "kinesis:DescribeStreamSummary",
-                "firehose:ListDeliveryStreams"
+                "firehose:ListDeliveryStreams",
+                "cloudwatch:*",
+                "logs:*"
             ],
-            "Resource": "*"
-        },
-        {
-            "Sid": "KinesisPerm3",
+            "Resource": "*",
             "Effect": "Allow",
-            "Action": "kinesis:ListShards",
-            "Resource": [
-                "arn:aws:kinesis:us-east-1:<accountid>:stream/nyc-taxi-trips"
-            ]
+            "Sid": "KinesisPerm2"
         }
     ]
 }
