@@ -103,6 +103,13 @@ CREATE OR REPLACE PUMP statistics_pump AS
 
 ![screenshot](images/Picture13.png)
 
+To review what we've done so far, we have defined two Streams and two Pumps.  A Stream is like an in-memory table.  A Pump is like a continuous query that is used to populate our stream.
+
+Our first stream is called "cleaned_trips" which is populated by our "clean_pump" pump which selects only those records of the type='trip' that have valid longitude and latitudes.
+
+Our second stream is called "trip_statistics" which is populated by our "statistics_pump" pump.  The "statistics_pump" pump calculates summary statistics for every 2 second interval.
+
+
 ### 13.	Extend the existing program by append the following code to the bottom of the existing SQL.
 
 ```
@@ -132,9 +139,9 @@ CREATE OR REPLACE PUMP trip_statistics_anomaly_pump AS
         FROM trip_statistics_anomaly_tmp
         ORDER BY FLOOR(trip_statistics_anomaly_tmp.ROWTIME TO SECOND), ANOMALY_SCORE DESC;
 
-CREATE OR REPLACE PUMP trip_statistics_anomaly_48min_pump AS 
+CREATE OR REPLACE PUMP trip_statistics_anomaly_60min_pump AS 
     INSERT INTO trip_statistics_anomaly_tmp
-        SELECT STREAM trip_count, passenger_count, total_amount, anomaly_score, anomaly_explanation, '48min'
+        SELECT STREAM trip_count, passenger_count, total_amount, anomaly_score, anomaly_explanation, '60min'
         FROM TABLE(RANDOM_CUT_FOREST_WITH_EXPLANATION(
             CURSOR(SELECT STREAM trip_count, passenger_count, total_amount FROM trip_statistics),
             100, 256, 100000, 24, false));
