@@ -2,7 +2,12 @@
 
 ## Part 1 - Create resources using AWS CLI 
 
-*NOTE: (Use this option only if you have a linux machine with AWS SDK installed and if you know how to use AWS profiles)*
+
+*NOTE: (Use this option only if you already comfortable with the AWS CLI and know how to configure AWS profiles)*
+
+*NOTE: (Be sure to use at least AWS CLI version 1.16.  run "aws --version" to check your CLI version)*
+
+
 
 Before we create the Kinesis Data Firehose delivery stream, lets fulfill following prerequisites that the firehouse delivery stream will need. 
 
@@ -80,7 +85,7 @@ Replace the < account-id-no-hyphen > with your accountID.  Replace the < yournam
         "ErrorOutputPrefix": "nyctaxitripserror/!{firehose:error-output-type}/year=!{timestamp:YYYY}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/",
         "BufferingHints": {
             "SizeInMBs": 128,
-            "IntervalInSeconds": 300
+            "IntervalInSeconds": 180
         },
         "CompressionFormat": "UNCOMPRESSED",
         "EncryptionConfiguration": {

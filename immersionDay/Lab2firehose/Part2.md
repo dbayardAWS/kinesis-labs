@@ -55,6 +55,8 @@ This will launch a simple SQL query, which when finished will look like:
 
 ![screen](images/f9.png)
 
+Note: if you do not see data, please re-run the "Load partitions" step.
+
 Observe that you are able to query your taxi trip data via SQL using Athena.
 
 

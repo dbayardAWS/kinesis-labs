@@ -9,7 +9,7 @@ The source code of the java replay program is available [here](https://github.co
 ## Create the Kinesis Data Stream
 In this section, you will create a new Kinesis Data Stream that we will use to stream a data set of NYC taxi trips.
 
-###  1.	Navigate to the Amazon Kinesis services and press Get Started when prompted (you may not need to complete this, if you have already used Amazon Kinesis). Select Create data stream to navigate to the Amazon Kinesis Data Stream service. 
+###  1.	Using the AWS Console, navigate to the Amazon Kinesis services and press Get Started when prompted (you may not need to complete this, if you have already used Amazon Kinesis). Select Create data stream to navigate to the Amazon Kinesis Data Stream service. 
 
 ![screenshot](images/Picture2.png)
 
@@ -71,7 +71,7 @@ In this section, you will connect to the new EC2 instance and launch the compile
 ### 1.	Connect to the EC2 instance via SSH from your laptop. You can obtain the command including the correct parameters from the Outputs section of the CloudFromation template.  
 
 Note: you will need to edit the "keyname.pem" and point to your downloaded ec2 ssh keypair file (your filename probably will be different than keyname.pem).
-Note: you will likely also need to do a "chmod 0600 keyname.pem" on your ssh keypair file to set the right permissions.
+Note: you will likely also need to do a "chmod 0400 keyname.pem" on your ssh keypair file to set the right permissions.
 
 Use the command from the Outputs section, but it should look somewhat like this:
 ```
@@ -79,7 +79,7 @@ Use the command from the Outputs section, but it should look somewhat like this:
 # THIS IS JUST AN EXAMPLE
 # USE THE OUTPUT FROM YOUR CLOUDFORMATION TEMPLATE.
 # YOU WILL NEED TO EDIT THE keyname.pem file/location.
-$ chmod 0600 keyname.pem
+$ chmod 0400 keyname.pem
 $ ssh -i keyname.pem -C ec2-user@ec2-34-254-244-45.us-east-1.compute.amazonaws.com
 ```
  
@@ -87,7 +87,7 @@ Note for Windows users: Instead of the above command, you will need to follow th
 
 ### [ ALTERNATE APPROACH ] As an alternative to running a SSH client on your laptop, you can also connect to the new EC2 instance using the [EC2 Instance Connect](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Connect-using-EC2-Instance-Connect.html) feature.
 
-Note: This feature assumes that you left the CloudFormation template ClientipAddressRange at its default of 0.0.0.0/0
+Note: This approach may not work at every client site depending on network firewall configuration and it assumes that you left the CloudFormation template ClientipAddressRange at its default of 0.0.0.0/0.  If the EC2 Instance Connect does not connect, please go back to using the standard SSH client program on your laptop.
 
 * Navigate to the EC2 Console and click on "Instances" on the left-hand column.
 
@@ -116,6 +116,13 @@ $ java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamRegion us-east-1 -spee
 Note: The almost correct command is again available from the Outputs section of the CloudFormation template, but this time you need to replace initials-taxi-trips in the streamName parameter with the name of Kinesis data stream you have created earlier.
 
 ![screenshot](images/Picture12alt.png)
+
+* Navigate to the Kinesis console and click on "initials-taxi-trips" in the Kinesis Data Streams section.
+
+* Click on the Monitoring tab and scroll down to view the "Incoming Data (Bytes) - Sum" metric.  You may need to wait 2 or 3 minutes as well as use the refresh button for the monitoring charts to see metrics. 
+
+![screenshot](images/Picture12metrics.png)
+
 
 If we review what you have done, you have created an EC2 environment that can run our Java taxi trip replay producer.  Then you have connected to the EC2 instance and started the replay program.  The speedup parameter of 1800 tells our replay program to replay the taxi trips 1800x faster, which is essentially to replay 30 minutes of taxi trips every second.
 
