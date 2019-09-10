@@ -33,7 +33,7 @@ public class BasicStreamingJob {
         inputProperties.setProperty(ConsumerConfigConstants.AWS_REGION, region);
         inputProperties.setProperty(ConsumerConfigConstants.STREAM_INITIAL_POSITION, "LATEST");
 
-        return env.addSource(new FlinkKinesisConsumer<>(inputStreamName, new SimpleStringSchema(), inputProperties));
+        return env.addSource(new FlinkKinesisConsumer<>(inputStreamName, new SimpleStringSchema(), inputProperties)).name(inputStreamName);
     }
 
     private static FlinkKinesisProducer<String> createSinkFromStaticConfig() {
@@ -53,7 +53,7 @@ public class BasicStreamingJob {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         // define the source
-        DataStream<String> input = createSourceFromStaticConfig(env).name(inputStreamName);
+        DataStream<String> input = createSourceFromStaticConfig(env);
 
         // add a sink
         input.addSink(createSinkFromStaticConfig()).name(outputStreamName);
