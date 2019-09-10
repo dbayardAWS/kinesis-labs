@@ -96,6 +96,7 @@ When the code is finished running, you should see output like this:
 * In the terminal, paste and run the following code to setup the Maven environment.
 
 ```
+python -m pip install --user boto3
 sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
 sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
 sudo yum install -y apache-maven
