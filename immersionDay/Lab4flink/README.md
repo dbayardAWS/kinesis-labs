@@ -179,7 +179,7 @@ When the code is finished running, you should see output like this:
 
 ### Edit and launch the stock.py Provider
 
-* In the Cloud9 navigator on the left-hand side, expand the kinesis-labs folder, then the src folder.  Then double-click on the stock.py file to open it in a tab in the editor.
+* In the Cloud9 navigator on the left-hand side, expand the kinesis-labs folder, then the immersionDay folder, then the Lab4flink folder, then the src folder.  Then double-click on the stock.py file to open it in a tab in the editor.
 
 ![screenshot](images/stock1.png)
 
@@ -198,7 +198,7 @@ When the code is finished running, you should see output like this:
 * In the new terminal tab, run these commands:
 
 ```
-cd kinesis-labs/src
+cd kinesis-labs/immersionDay/Lab4flink/src
 python stock.py
 
 ```
@@ -212,7 +212,7 @@ Leave the stock.py producer code running in its terminal tab for now.
 
 ### Edit and launch the readStream.py Consumer
 
-* In the Cloud9 navigator on the left-hand side, expand the kinesis-labs folder, then the src folder.  Then double-click on the readStream.py file to open it in a tab in the editor.
+* In the Cloud9 navigator on the left-hand side, expand the kinesis-labs folder, then the immersionDay folder, then the Lab4flink folder, then the src folder.  Then double-click on the readStream.py file to open it in a tab in the editor.
 
 ![screenshot](images/read1.png)
 
@@ -233,7 +233,7 @@ Note: at this point, the my_stream_name should be set to the ExampleInputStream[
 * In the new terminal tab, run these commands:
 
 ```
-cd kinesis-labs/src
+cd kinesis-labs/immersionDay/Lab4flink/src
 python readStream.py
 
 ```
@@ -262,7 +262,7 @@ Our first application will simply read from one Kinesis Data Stream as source an
 
 ![screenshot](images/arch2.png)
 
-* In the navigator on the left-hand side, expand the kinesis-labs folder, then the src folder, all the way as shown in the below screensot until you get to the BasicStreamingJob.java file.  You may need to slide the divider between the navigator and the main editor to the right to make the navigator section wider.  Double-click on the file to open it in a tab in the editor.
+* In the navigator on the left-hand side, expand the kinesis-labs/immersionDay/Lab4flink folders, then the src folder, all the way as shown in the below screensot until you get to the BasicStreamingJob.java file.  You may need to slide the divider between the navigator and the main editor to the right to make the navigator section wider.  Double-click on the file to open it in a tab in the editor.
 
 ![screenshot](images/started1.png)
 
@@ -283,7 +283,7 @@ Note: Be sure to edit both the inputStreamName and outputStreamName
 * In your left-most Terminal tab (this is where we setup the pre-requisites and set certain environment variables like INITIALS), run these commands to compile and build your KDAJ application:
 
 ```
-cd ~/environment/kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/GettingStarted/
+cd ~/environment/kinesis-labs/immersionDay/Lab4flink/src/amazon-kinesis-data-analytics-java-examples/GettingStarted/
 mvn install:install-file -Dfile=/home/ec2-user/environment/flink-release-1.6.2/flink-connectors/flink-connector-kinesis/target/flink-connector-kinesis_2.11-1.6.2.jar -DpomFile=/home/ec2-user/environment/flink-release-1.6.2/flink-connectors/flink-connector-kinesis/target/dependency-reduced-pom.xml
 mvn package
 
@@ -294,7 +294,7 @@ When the code is finished running, you should see output like this:
 
 ![screenshot](images/started4.png)
 
-At this point, our Getting Started KDAJ application has been compiled and a jar file ready for deployment has been built.  The jar has been placed in the kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/GettingStarted/target directory if you want to look at.
+At this point, our Getting Started KDAJ application has been compiled and a jar file ready for deployment has been built.  The jar has been placed in the kinesis-labs/immersionDay/Lab4flink/src/amazon-kinesis-data-analytics-java-examples/GettingStarted/target directory if you want to look at.
 
 ### Create an s3 bucket to upload code
 Kinesis Data Analytics for Java expects the application jar file to be located on a S3 bucket.  So, we will create a S3 bucket to hold our application.
@@ -331,7 +331,7 @@ When the code is finished running, you should see output like this:
 
 ```
 echo lowercaseusername=$lowercaseusername
-cd ~/environment/kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/GettingStarted/target/
+cd ~/environment/kinesis-labs/immersionDay/Lab4flink/src/amazon-kinesis-data-analytics-java-examples/GettingStarted/target/
 aws s3 rm s3://lab-kdaj-app-code-$lowercaseusername/java-getting-started-1.0.jar
 aws s3 cp aws-kinesis-analytics-java-apps-1.0.jar s3://lab-kdaj-app-code-$lowercaseusername/java-getting-started-1.0.jar
 
@@ -495,7 +495,7 @@ Now that our Getting Started KDAJ application is running, let's edit our readStr
 * Run the file in a terminal tab with this command:
 
 ```
-cd ~/environment/kinesis-labs/src
+cd ~/environment/kinesis-labs/immersionDay/Lab4flink/src
 python readStream.py
 
 ```
@@ -542,7 +542,7 @@ The above diagram is from the Flink web page on Windows.
 
 The application code is located in the TumblingWindowStreamingJob.java file
 
-* In the navigator on the left-hand side, expand the kinesis-labs folder, then the src folder, all the way as shown in the below screensot until you get to the TumblingWindoStreamingJob.java file.  You may need to slide the divider between the navigator and the main editor to the right to make the navigator section wider.  Double-click on the file to open it in a tab in the editor.
+* In the navigator on the left-hand side, expand the kinesis-labs/immersionDay/Lab4flink folders, then the src folder, all the way as shown in the below screensot until you get to the TumblingWindoStreamingJob.java file.  You may need to slide the divider between the navigator and the main editor to the right to make the navigator section wider.  Double-click on the file to open it in a tab in the editor.
 
 ![screenshot](images/tumbling1.png)
 
@@ -563,7 +563,7 @@ Note: Be sure to edit both the inputStreamName and outputStreamName
 * In your left-most Terminal tab (or open a new Terminal tab if you wish), run these commands to compile and build your KDAJ application:
 
 ```
-cd ~/environment/kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/TumblingWindow/
+cd ~/environment/kinesis-labs/immersionDay/Lab4flink/src/amazon-kinesis-data-analytics-java-examples/TumblingWindow/
 mvn package
 
 ```
@@ -572,7 +572,7 @@ When the code is finished running, you should see output like this:
 
 ![screenshot](images/tumbling4.png)
 
-At this point, our Tumbling Window KDAJ application has been compiled and a jar file ready for deployment has been built.  The jar has been placed in the kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/TumblingWindow/target directory if you want to look at.
+At this point, our Tumbling Window KDAJ application has been compiled and a jar file ready for deployment has been built.  The jar has been placed in the kinesis-labs/immersionDay/Lab4flink/src/amazon-kinesis-data-analytics-java-examples/TumblingWindow/target directory if you want to look at.
 
 ### Copy the application jar file to the s3 bucket
 
@@ -580,7 +580,7 @@ At this point, our Tumbling Window KDAJ application has been compiled and a jar 
 
 ```
 echo lowercaseusername=$lowercaseusername
-cd ~/environment/kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/TumblingWindow/target/
+cd ~/environment/kinesis-labs/immersionDay/Lab4flink/src/amazon-kinesis-data-analytics-java-examples/TumblingWindow/target/
 aws s3 rm s3://lab-kdaj-app-code-$lowercaseusername/java-getting-started-1.0.jar
 aws s3 cp aws-kinesis-analytics-java-apps-1.0.jar s3://lab-kdaj-app-code-$lowercaseusername/java-getting-started-1.0.jar
 
@@ -642,7 +642,7 @@ Wait until you see the ApplicationStatus equal to RUNNING like this:
 * Run the readStream.py consumer
 
 ```
-cd kinesis-labs/src
+cd kinesis-labs/immersionDay/Lab4flink/src
 python readStream.py
 
 ```
@@ -700,7 +700,7 @@ The above diagram is from the Flink web page on Windows.
 
 The application code is located in the SlidingWindowStreamingJobWithParallelism.java file
 
-* In the navigator on the left-hand side, expand the kinesis-labs folder, then the src folder, all the way as shown in the below screensot until you get to the SlidingWindowStreamingJobWithParallelism.java file.  You may need to slide the divider between the navigator and the main editor to the right to make the navigator section wider.  Double-click on the file to open it in a tab in the editor.
+* In the navigator on the left-hand side, expand the kinesis-labs/immersionDay/Lab4flink folders, then the src folder, all the way as shown in the below screensot until you get to the SlidingWindowStreamingJobWithParallelism.java file.  You may need to slide the divider between the navigator and the main editor to the right to make the navigator section wider.  Double-click on the file to open it in a tab in the editor.
 
 ![screenshot](images/sliding1.png)
 
@@ -721,7 +721,7 @@ Note: Be sure to edit both the inputStreamName and outputStreamName
 * In your left-most Terminal tab (or open a new Terminal tab if you wish), run these commands to compile and build your KDAJ application:
 
 ```
-cd ~/environment/kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/SlidingWindow/
+cd ~/environment/kinesis-labs/immersionDay/Lab4flink/src/amazon-kinesis-data-analytics-java-examples/SlidingWindow/
 mvn package
 
 ```
@@ -730,7 +730,7 @@ When the code is finished running, you should see output like this:
 
 ![screenshot](images/sliding4.png)
 
-At this point, our Sliding Window KDAJ application has been compiled and a jar file ready for deployment has been built.  The jar has been placed in the kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/SlidingWindow/target directory if you want to look at.
+At this point, our Sliding Window KDAJ application has been compiled and a jar file ready for deployment has been built.  The jar has been placed in the kinesis-labs/immersionDay/Lab4flink/src/amazon-kinesis-data-analytics-java-examples/SlidingWindow/target directory if you want to look at.
 
 ### Copy the application jar file to the s3 bucket
 
@@ -738,7 +738,7 @@ At this point, our Sliding Window KDAJ application has been compiled and a jar f
 
 ```
 echo lowercaseusername=$lowercaseusername
-cd ~/environment/kinesis-labs/src/amazon-kinesis-data-analytics-java-examples/SlidingWindow/target/
+cd ~/environment/kinesis-labs/immersionDay/Lab4flink/src/amazon-kinesis-data-analytics-java-examples/SlidingWindow/target/
 aws s3 rm s3://lab-kdaj-app-code-$lowercaseusername/java-getting-started-1.0.jar
 aws s3 cp aws-kinesis-analytics-java-apps-1.0.jar s3://lab-kdaj-app-code-$lowercaseusername/java-getting-started-1.0.jar
 
@@ -802,7 +802,7 @@ Wait until you see the ApplicationStatus equal to RUNNING like this:
 * Run the readStream.py consumer
 
 ```
-cd kinesis-labs/src
+cd kinesis-labs/immersionDay/Lab4flink/src
 python readStream.py
 
 ```
