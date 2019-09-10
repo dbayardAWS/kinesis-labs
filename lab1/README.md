@@ -78,10 +78,11 @@ Kinesis Data Analytics for Java (KDAJ) is based on Apache Flink 1.6.2.  To build
 
 ![screenshot](images/prereq2.png)
 
-* In the terminal, paste and run the following code to setup the java 1.8 environment.
+* In the terminal, paste and run the following code to setup the boto3 and java 1.8 environment.
 
 ```
 sudo yum -y update
+python -m pip install --user boto3
 sudo yum -y install java-1.8.0-openjdk-devel
 sudo update-alternatives --set javac /usr/lib/jvm/java-1.8.0-openjdk.x86_64/bin/javac
 sudo update-alternatives --set java /usr/lib/jvm/jre-1.8.0-openjdk.x86_64/bin/java
@@ -96,7 +97,6 @@ When the code is finished running, you should see output like this:
 * In the terminal, paste and run the following code to setup the Maven environment.
 
 ```
-python -m pip install --user boto3
 sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
 sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
 sudo yum install -y apache-maven
